@@ -2,7 +2,7 @@
 ## I will update this further on. This is still a work in progress and I won't expect things to work without some fiddling.
 
 ## installation    
- - clone repo
+ - clone repo `https://github.com/captini-org/captini-django-backend.git`
  - make sure to have python 3.10 installed and pip
  - Install virtualenv with pip
  `pip install virtualenv`
