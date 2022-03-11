@@ -3,7 +3,8 @@
 
 ## installation    
  - clone repo `https://github.com/captini-org/captini-django-backend.git`
- - make sure to have python 3.10 installed and pip
+ - Navigate to repo folder CaptiniAPI
+ - Make sure to have python 3.10 installed and pip
  - Install virtualenv with pip
  `pip install virtualenv`
  - Create a virtual environment
@@ -11,7 +12,7 @@
  - Activate the virtual environment
  `source venv/bin/activate` for linux
  `\venv\Scripts\activate.bat` for windows
- - install requirements
+ - Install requirements
  `pip install -r requirements.txt`
  - Create a postgres database
  - Put the correct credentials into settings.py (make sure your database name, user and password are the same.)
