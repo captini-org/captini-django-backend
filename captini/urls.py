@@ -10,7 +10,8 @@ urlpatterns = [
     path("users/", views.UserList.as_view({'get': 'list'})),
     path("users/<int:pk>/", views.UserDetails.as_view(), name="user-detail"),
     path("users/signup/", views.UserCreate.as_view(), name="user-create"),
-
+    path("users/login/", views.UserLogin.as_view(), name="user-login"),
+    path("users/logout/", views.UserLogout.as_view(), name="user-logout"),
 ]
 
 urpatterns = format_suffix_patterns(urlpatterns)
