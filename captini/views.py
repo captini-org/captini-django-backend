@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import redirect
 
 # Create your views here.
 from captini.models import User
@@ -16,15 +17,16 @@ from rest_framework import generics
 
 from rest_framework import status
 from captini.serializers import UserSerializer, LoginSerializer, LogoutSerializer, RegisterSerializer
+import jwt
 
-
+from django.conf import settings
 
 
 class UserList(viewsets.ModelViewSet):
     """
     List all users, or create a new user.
     """
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
 
     def get(self, request, *args, **kwargs):
@@ -41,37 +43,24 @@ class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-class UserLogin(generics.UpdateAPIView):
+class UserLogin(generics.GenericAPIView):
 
-    queryset = User.objects.all()
     serializer_class = LoginSerializer
 
-    error_messages = {
-        'invalid': "Invalid username or password",
-        'disabled': "Sorry, this account is suspended",
-    }
-
     def post(self,request):
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(email=email, password=password)
+        data = request.data
+        print(data)
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+        print(user)
         if user is not None:
-            if user.is_active:
-                login(request, user)
-
-        return Response(status=status.HTTP_200_OK)
-
-class UserLogout(generics.UpdateAPIView):
-
-    queryset = User.objects.all()
-    serializer_class = LogoutSerializer
+            serializer = self.serializer_class(user)
+            login(request, user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-    def post(self,request):
-        email = request.POST.get('email')
-        user = authenticate(email = email)
-        if user is not None:
-            if user.is_active:
-                logout(request, user)
-
-        return Response(status = status.HTTP_200_OK)
+def user_logout(request):
+    logout(request)
+    return redirect('/users/login')

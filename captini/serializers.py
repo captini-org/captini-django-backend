@@ -46,11 +46,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             "age"
             )
 
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True}
-        }
-
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
@@ -68,7 +63,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             location=validated_data['location']
         )
 
-        
         user.set_password(validated_data['password'])
         user.save()
 
@@ -78,10 +72,12 @@ class LoginSerializer(serializers.ModelSerializer):
 
      class Meta:
          model = User
-         fields = ('email','password') 
+         fields = ('username','password', 'token')
+
+         read_only_fields=['token']
 
 class LogoutSerializer(serializers.ModelSerializer):
 
      class Meta:
          model = User
-         fields = ["email"] 
+         fields = ['username'] 
