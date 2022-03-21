@@ -72,12 +72,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
      class Meta:
          model = User
-         fields = ('username','password', 'token')
+         fields = ('username', 'password', 'token')
 
          read_only_fields=['token']
 
-class LogoutSerializer(serializers.ModelSerializer):
-
-     class Meta:
-         model = User
-         fields = ['username'] 

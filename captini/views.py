@@ -16,7 +16,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework import generics
 
 from rest_framework import status
-from captini.serializers import UserSerializer, LoginSerializer, LogoutSerializer, RegisterSerializer
+from captini.serializers import UserSerializer, LoginSerializer, RegisterSerializer
 import jwt
 
 from django.conf import settings
