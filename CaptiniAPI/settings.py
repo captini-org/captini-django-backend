@@ -32,7 +32,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
 
-CSRF_TRUSTED_ORIGNS = [
+CSRF_TRUSTED_ORIGINS = [
     'https://hidden-hamlet-75709.herokuapp.com',
 ]
 
