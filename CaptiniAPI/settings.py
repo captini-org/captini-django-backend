@@ -33,7 +33,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CSRF_TRUSTED_ORIGNS = [
-    'https://hidden-hamlet-75709.herokuapp.com/',
+    'https://hidden-hamlet-75709.herokuapp.com',
 ]
 
 
