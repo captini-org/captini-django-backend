@@ -1,4 +1,4 @@
-from captini.models import User
+from captini.models import User, Topic, Lesson, Flashcard, Prompt
 from rest_framework import serializers
 
 from rest_framework.validators import UniqueValidator
@@ -19,8 +19,10 @@ class UserSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_active",
             "nationality",
+            #"spoken_languages",
             "location",
-            "age",
+            "birthday",
+            "progress",
         ]
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -35,16 +37,17 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 
+        fields = ['username', 
             'password', 
             'password2', 
             'email', 
             'first_name', 
             'last_name', 
             "nationality",
+            #"spoken_languages",
             "location",
-            "age"
-            )
+            "birthday"
+            ]
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -58,7 +61,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            age=validated_data['age'],
+            age=validated_data['birthday'],
+            #spoken_languages=validated_data['spoken_languages'],
             nationality=validated_data['nationality'],
             location=validated_data['location']
         )
@@ -75,4 +79,43 @@ class LoginSerializer(serializers.ModelSerializer):
          fields = ('username', 'password', 'token')
 
          read_only_fields=['token']
+
+class FlashcardSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Flashcard
+        fields = ['id', 'display_id', 'text']
+         
+
+class PromptSerializer(serializers.ModelSerializer):
+    flashcards = FlashcardSerializer()
+
+    class Meta:
+        model = Prompt
+        fields = ['id', 'display_id', 'text', 'audio_url', 'flashcards']
+         
+
+class LessonSerializer(serializers.ModelSerializer):
+    prompts = PromptSerializer(many=True)
+
+    class Meta:
+        model = Lesson
+        fields = ['id', 'description', 'subject', 'prompts']
+         
+
+class TopicSerializer(serializers.ModelSerializer):
+    lessons = LessonSerializer(many=True)
+
+    class Meta:
+        model = Topic
+        fields = ['id', 'topic_name', 'lessons']
+
+
+    def create(self, validated_data):
+        topic_data = validated_data.pop('lessons')
+        topic = Topic.objects.create(**validated_data)
+        for lesson_data in topic_data:
+            Lesson.objects.create(topic=topic, **lesson_data)
+        return topic
+
 

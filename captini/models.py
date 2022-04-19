@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, UserManager, PermissionsMixin)
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.contrib.postgres.fields import ArrayField
+from .forms import ChoiceArrayField
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from datetime import datetime
@@ -61,24 +63,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     Username and password are required. Other fields are optional.
     """
 
-    username_validator = UnicodeUsernameValidator()
-
     username = models.CharField(
         _("username"),
         max_length=150,
         unique=True,
         help_text=_(
-            "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+            "Required. 150 characters or fewer."
         ),
-        validators=[username_validator],
         error_messages={
             "unique": _("A user with that username already exists."),
         },
     )
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    age = models.IntegerField(default=0)
+    birthday = models.DateField(auto_now=False, default=datetime.now)
     nationality = models.CharField(max_length=254)
+    #spoken_languages = ArrayField(
+    #    models.CharField(
+    #        max_length=50, blank=True
+    #    )
+    #)
+    progress = ArrayField(
+        models.IntegerField
+        (
+            blank=True
+        )
+    )
     location = models.CharField(max_length=254)
     email = models.EmailField(_("email address"), blank=False, unique=True)
     is_staff = models.BooleanField(
@@ -110,3 +120,27 @@ class User(AbstractBaseUser, PermissionsMixin):
                 settings.SECRET_KEY, algorithm='HS256')
             
             return token
+
+class Topic(models.Model):
+    topic_name = models.CharField(max_length=100, default="")
+    
+
+class Lesson(models.Model):
+    topic = models.ForeignKey(Topic, related_name='lessons', on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100)
+    description = models.CharField(max_length=254)
+
+    class Meta:
+        ordering = ['id']
+
+class Prompt(models.Model):
+    Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
+    display_id = models.CharField(max_length=25, blank=False, unique=True)
+    text = models.CharField(_("prompt text"), max_length=500)
+    audio_url = models.CharField(_("audio url"), blank=True, max_length=100)
+
+class Flashcard(models.Model):
+    Prompt = models.OneToOneField(Prompt, related_name="flashcards", on_delete=models.CASCADE)
+    display_id = models.CharField(max_length=25, blank=False, unique=True)
+    text = models.CharField(_("flashcard text"),max_length=500, default="", blank=True)
+

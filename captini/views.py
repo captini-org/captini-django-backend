@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import redirect
 
 # Create your views here.
-from captini.models import User
+from captini.models import User, Topic
 from rest_framework import status
 from django.http import Http404
 from rest_framework.views import APIView
@@ -16,15 +16,24 @@ from rest_framework.test import APIRequestFactory
 from rest_framework import generics
 
 from rest_framework import status
-from captini.serializers import UserSerializer, LoginSerializer, RegisterSerializer
+from captini.serializers import *
 import jwt
 
 from django.conf import settings
 
 
+class TopicList(generics.ListAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+
+
+class TopicCreate(generics.CreateAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+
 class UserList(viewsets.ModelViewSet):
     """
-    List all users, or create a new user.
+    List all users
     """
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
