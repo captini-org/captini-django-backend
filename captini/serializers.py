@@ -118,12 +118,13 @@ class TopicSerializer(serializers.ModelSerializer):
     #        Lesson.objects.create(topic=topic, **lesson_data)
     #    return topic
 
-class LessonsCompletedSerializer(serializers.ModelSerializer):
-    user = request.user
-    lesson_id_list = user.get('progress')
-    print(lesson_id_list)
-    prompts = PromptSerializer(many=True)
+#class LessonsCompletedSerializer(serializers.ModelSerializer):
+#    user = request.user
+#    lesson_id_list = user.get('progress')
+#    print(lesson_id_list)
+#    prompts = PromptSerializer(many=True)
 
-    class Meta:
-        model = Lesson
-        fields = ['id', 'subject', 'description', 'prompts']
+#    class Meta:
+#        model = Lesson
+#        fields = ['id', 'subject', 'description', 'prompts']
+#

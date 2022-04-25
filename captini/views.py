@@ -52,11 +52,11 @@ class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-class UserProgress(generics.ListAPIView):
-    lesson_id_list = self.request.user.lesson_id_list
-    print(lesson_id_list)
-    queryset = Lesson.objects.filter(pk__in=lesson_id_list)
-    serializer_class = LessonSerializer
+#class UserProgress(generics.ListAPIView):
+#    lesson_id_list = self.request.user.lesson_id_list
+#    print(lesson_id_list)
+#    queryset = Lesson.objects.filter(pk__in=lesson_id_list)
+#    serializer_class = LessonSerializer
 
 class UserLogin(generics.GenericAPIView):
 
