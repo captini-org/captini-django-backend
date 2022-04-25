@@ -111,11 +111,19 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = ['id', 'topic_name', 'lessons']
 
 
-    def create(self, validated_data):
-        topic_data = validated_data.pop('lessons')
-        topic = Topic.objects.create(**validated_data)
-        for lesson_data in topic_data:
-            Lesson.objects.create(topic=topic, **lesson_data)
-        return topic
+    #def create(self, validated_data):
+    #    topic_data = validated_data.pop('lessons')
+    #    topic = Topic.objects.create(**validated_data)
+    #    for lesson_data in topic_data:
+    #        Lesson.objects.create(topic=topic, **lesson_data)
+    #    return topic
 
+class LessonsCompletedSerializer(serializers.ModelSerializer):
+    user = request.user
+    lesson_id_list = user.get('progress')
+    print(lesson_id_list)
+    prompts = PromptSerializer(many=True)
 
+    class Meta:
+        model = Lesson
+        fields = ['id', 'subject', 'description', 'prompts']

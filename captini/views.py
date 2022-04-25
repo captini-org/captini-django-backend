@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 # Create your views here.
 from captini.models import User, Topic
 from rest_framework import status
-from django.http import Http404
+from django.http import Http404, request
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -27,9 +27,9 @@ class TopicList(generics.ListAPIView):
     serializer_class = TopicSerializer
 
 
-class TopicCreate(generics.CreateAPIView):
-    queryset = Topic.objects.all()
-    serializer_class = TopicSerializer
+#class TopicCreate(generics.CreateAPIView):
+#    queryset = Topic.objects.all()
+#    serializer_class = TopicSerializer
 
 class UserList(viewsets.ModelViewSet):
     """
@@ -51,6 +51,12 @@ class UserCreate(generics.CreateAPIView):
     
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+class UserProgress(generics.ListAPIView):
+    lesson_id_list = self.request.user.lesson_id_list
+    print(lesson_id_list)
+    queryset = Lesson.objects.filter(pk__in=lesson_id_list)
+    serializer_class = LessonSerializer
 
 class UserLogin(generics.GenericAPIView):
 

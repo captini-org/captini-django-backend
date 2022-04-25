@@ -87,7 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         models.IntegerField
         (
             blank=True
-        )
+        ), blank=True
     )
     location = models.CharField(max_length=254)
     email = models.EmailField(_("email address"), blank=False, unique=True)
@@ -123,6 +123,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Topic(models.Model):
     topic_name = models.CharField(max_length=100, default="")
+    level = models.IntegerField(default=0)
     
 
 class Lesson(models.Model):
