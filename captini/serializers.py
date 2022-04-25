@@ -108,7 +108,7 @@ class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Topic
-        fields = ['id', 'topic_name', 'lessons']
+        fields = ['id', 'topic_name', 'level', 'lessons']
 
 
     #def create(self, validated_data):
