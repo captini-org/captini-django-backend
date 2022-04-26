@@ -24,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             "birthday",
             "progress",
         ]
+        ordering = ['-id']
 
 class RegisterSerializer(serializers.ModelSerializer):
     
@@ -85,6 +86,7 @@ class FlashcardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flashcard
         fields = ['id', 'display_id', 'text']
+        ordering = ['-id']
          
 
 class PromptSerializer(serializers.ModelSerializer):
@@ -93,6 +95,7 @@ class PromptSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prompt
         fields = ['id', 'display_id', 'text', 'audio_url', 'flashcards']
+        ordering = ['-id']
          
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -101,6 +104,7 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ['id', 'description', 'subject', 'prompts']
+        ordering = ['-id']
          
 
 class TopicSerializer(serializers.ModelSerializer):
@@ -109,6 +113,7 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ['id', 'topic_name', 'level', 'lessons']
+        ordering = ['-id']
 
 
     #def create(self, validated_data):

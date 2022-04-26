@@ -23,8 +23,19 @@ from django.conf import settings
 
 
 class TopicList(generics.ListAPIView):
-    queryset = Topic.objects.all()
     serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned topic to a given user,
+        by filtering against a `topic` query parameter in the URL.
+        """
+        queryset = Topic.objects.all()
+        topic = self.request.query_params.get('topic_name')
+        print(topic)
+        if topic is not None:
+            queryset = queryset.filter(topic_name__iexact=topic)
+        return queryset
 
 
 #class TopicCreate(generics.CreateAPIView):

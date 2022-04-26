@@ -121,9 +121,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             
             return token
 
+class TopicNameField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        super(TopicNameField, self).__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        return str(value).lower()
+
 class Topic(models.Model):
-    topic_name = models.CharField(max_length=100, default="")
+    topic_name = TopicNameField(max_length=100, default="")
     level = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['id']
     
 
 class Lesson(models.Model):
@@ -140,8 +150,13 @@ class Prompt(models.Model):
     text = models.CharField(_("prompt text"), max_length=500)
     audio_url = models.CharField(_("audio url"), blank=True, max_length=100)
 
+    class Meta:
+        ordering = ['id']
+
 class Flashcard(models.Model):
     Prompt = models.OneToOneField(Prompt, related_name="flashcards", on_delete=models.CASCADE)
     display_id = models.CharField(max_length=25, blank=False, unique=True)
     text = models.CharField(_("flashcard text"),max_length=500, default="", blank=True)
 
+    class Meta:
+        ordering = ['id']
