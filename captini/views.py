@@ -37,7 +37,11 @@ class TopicList(generics.ListAPIView):
             queryset = queryset.filter(topic_name__iexact=topic)
         return queryset
 
+class TopicDetails(generics.RetrieveAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
+   
 #class TopicCreate(generics.CreateAPIView):
 #    queryset = Topic.objects.all()
 #    serializer_class = TopicSerializer
