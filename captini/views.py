@@ -46,6 +46,10 @@ class TopicDetails(generics.RetrieveAPIView):
 #    queryset = Topic.objects.all()
 #    serializer_class = TopicSerializer
 
+class LessonDetails(generics.RetrieveAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+
 class UserList(viewsets.ModelViewSet):
     """
     List all users

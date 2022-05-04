@@ -8,7 +8,8 @@ from captini import views
 
 urlpatterns = [
     path("topics/", views.TopicList.as_view(), name="topic-list"),
-    path("topics/<int:pk>/", views.TopicDetails.as_view(), name="topic_details"),
+    path("topics/<int:pk>/", views.TopicDetails.as_view(), name="topic-details"),
+    path("lessons/<int:pk>/", views.LessonDetails().as_view(), name="lesson-details"),
 #    path("users/<int:pk>/progress", views.userProgress.as_view(), name="user-progress"),
     #path("topics/create/", views.TopicCreate.as_view(), name="topic-create"),
     path("users/", views.UserList.as_view({'get': 'list'})),
