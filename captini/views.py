@@ -83,13 +83,12 @@ class UserLogin(generics.GenericAPIView):
 
     def post(self,request):
         data = request.data
-        print(data)
         username = data.get('username')
         password = data.get('password')
         user = authenticate(username=username, password=password)
-        print(user)
         if user is not None:
             serializer = self.serializer_class(user)
+            print(serializer.data)
             login(request, user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_401_UNAUTHORIZED)

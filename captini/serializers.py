@@ -1,4 +1,4 @@
-from captini.models import User, Topic, Lesson, Flashcard, Prompt
+from captini.models import User, Topic, Lesson, Flashcard, Prompt, Task
 from rest_framework import serializers
 
 from rest_framework.validators import UniqueValidator
@@ -47,7 +47,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email', 
             'first_name', 
             'last_name', 
-            'age',
             'nationality',
             #"spoken_languages",
             'location',
@@ -82,24 +81,31 @@ class LoginSerializer(serializers.ModelSerializer):
 
      class Meta:
          model = User
-         fields = ('username', 'password', 'token')
+         fields = ('id', 'username', 'password', 'token')
 
-         read_only_fields=['token']
+         read_only_fields=['id', 'token']
 
 class FlashcardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Flashcard
-        fields = ['id', 'display_id', 'text']
+        fields = ['id', 'prompt_identifier', 'text']
         ordering = ['-id']
-         
+
+class TaskSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
+        fields = ['id', 'prompt_identifier', 'task_text', 'audio_url']
+        ordering = ['-id']
 
 class PromptSerializer(serializers.ModelSerializer):
     flashcards = FlashcardSerializer()
+    tasks = TaskSerializer(many=True)
 
     class Meta:
         model = Prompt
-        fields = ['id', 'display_id', 'text', 'audio_url', 'flashcards']
+        fields = ['id', 'prompt_identifier', 'prompt_description', 'tasks', 'flashcards']
         ordering = ['-id']
          
 

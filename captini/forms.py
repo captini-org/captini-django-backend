@@ -1,7 +1,7 @@
 from django.contrib.postgres.fields import ArrayField
+
 from django_better_admin_arrayfield.forms.fields import DynamicArrayField
 
-from django import forms
 
 class ChoiceArrayField(ArrayField):
     """

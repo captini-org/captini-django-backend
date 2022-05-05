@@ -149,16 +149,21 @@ class Lesson(models.Model):
 
 class Prompt(models.Model):
     Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
-    display_id = models.CharField(max_length=25, blank=False, unique=True)
-    text = models.CharField(_("prompt text"), max_length=500)
-    audio_url = models.CharField(_("audio url"), blank=True, max_length=100)
+    prompt_description = models.CharField(_("prompt description"), max_length=200, blank=True)
+    prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
 
     class Meta:
         ordering = ['id']
 
+class Task(models.Model):
+    prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
+    prompt_identifier = models.CharField(max_length=25, blank=False)
+    task_text = models.TextField(_("task text"), max_length=255)
+    audio_url = models.CharField(_("audio url"), blank=True, max_length=500)
+
 class Flashcard(models.Model):
-    Prompt = models.OneToOneField(Prompt, related_name="flashcards", on_delete=models.CASCADE)
-    display_id = models.CharField(max_length=25, blank=False, unique=True)
+    prompt = models.OneToOneField(Prompt, related_name="flashcards", on_delete=models.CASCADE)
+    prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
     text = models.CharField(_("flashcard text"),max_length=500, default="", blank=True)
 
     class Meta:
