@@ -22,6 +22,9 @@ class UserSerializer(serializers.ModelSerializer):
             #"spoken_languages",
             "location",
             "birthday",
+            "score",
+            "global_rank",
+            "country_rank",
             "progress",
         ]
         ordering = ['-id']
@@ -44,10 +47,11 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email', 
             'first_name', 
             'last_name', 
-            "nationality",
+            'age',
+            'nationality',
             #"spoken_languages",
-            "location",
-            "birthday"
+            'location',
+            'birthday'
             ]
 
     def validate(self, attrs):
@@ -65,7 +69,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             age=validated_data['birthday'],
             #spoken_languages=validated_data['spoken_languages'],
             nationality=validated_data['nationality'],
-            location=validated_data['location']
+            location=validated_data['location'],
+            birthday=validated_data['birthday']
         )
 
         user.set_password(validated_data['password'])

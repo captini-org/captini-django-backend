@@ -105,6 +105,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    score = models.IntegerField(_("score"), default=0)
+    global_rank = models.IntegerField(_("global rank"), default=0)
+    country_rank = models.IntegerField(_("country rank"), default=0)
 
     objects = UserManager()
 
