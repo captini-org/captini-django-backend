@@ -3,11 +3,14 @@ dj-database-url==0.5.0
 Django==4.0.3
 django-better-admin-arrayfield==1.4.2
 django-cors-headers==3.11.0
+django-extensions==3.1.5
 django-heroku==0.3.1
 django-language-field==0.0.3
 django-rest-auth==0.9.5
 djangorestframework==3.13.1
+pika==1.2.1
 psycopg2==2.9.3
+pygraphviz==1.9
 PyJWT==2.3.0
 pytz==2021.3
 six==1.16.0
