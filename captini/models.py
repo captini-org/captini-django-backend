@@ -6,6 +6,10 @@ from .forms import ChoiceArrayField
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from datetime import datetime
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail  
 import uuid
 
 import jwt
@@ -89,7 +93,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             blank=True
         ), blank=True
     )
-    location = models.CharField(max_length=254)
     email = models.EmailField(_("email address"), blank=False, unique=True)
     is_staff = models.BooleanField(
         _("staff status"),
@@ -168,3 +171,27 @@ class Flashcard(models.Model):
 
     class Meta:
         ordering = ['id']
+
+
+class UserPromptScore(models.Model):
+    user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
+    lesson_topic = models.CharField(max_length = 255, blank=False)
+    prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
+    score = models.IntegerField(default=0)
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    email_plaintext_message = "{}?token={}".format('http://127.0.0.1:8000/api/password_reset/confirm' , reset_password_token.key)
+
+    send_mail(
+        # title:
+        "Password Reset for captini",
+        # message:
+        email_plaintext_message,
+        # from:
+        "no-reply@tiro.is",
+        # to:
+        [reset_password_token.user.email]
+    )

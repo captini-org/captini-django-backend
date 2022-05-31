@@ -1,11 +1,20 @@
-from captini.models import User, Topic, Lesson, Flashcard, Prompt, Task
+from captini.models import User, Topic, Lesson, Flashcard, Prompt, Task, UserPromptScore
 from rest_framework import serializers
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
 
+
+class UserPromptScoreSerializer(serializers.Serializer):
+
+    class Meta:
+        model = UserPromptScore
+        fields = ['id', 'lesson_topic', 'prompt_identifier', 'score']
+        ordering = ['-id']
+
 class UserSerializer(serializers.ModelSerializer):
+    user_prompt_score = UserPromptScoreSerializer(many=True)
 
     class Meta:
         model = User
@@ -26,6 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
             "global_rank",
             "country_rank",
             "progress",
+            "user_prompt_score",
         ]
         ordering = ['-id']
 
@@ -84,6 +94,15 @@ class LoginSerializer(serializers.ModelSerializer):
          fields = ('id', 'username', 'password', 'token')
 
          read_only_fields=['id', 'token']
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)         
 
 class FlashcardSerializer(serializers.ModelSerializer):
 
