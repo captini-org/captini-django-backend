@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from .models import User, Topic, Lesson, Prompt, Flashcard, Task
+from .models import User, Topic, Lesson, Prompt, Flashcard, Task, UserPromptScore
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
@@ -23,7 +23,6 @@ class UserCreationForm(forms.ModelForm):
             'last_name', 
             'nationality',
             #"spoken_languages",
-            'location',
             'birthday'
             ]
 
@@ -52,7 +51,6 @@ class UserChangeForm(forms.ModelForm):
             'last_name', 
             'nationality',
             #"spoken_languages",
-            'location',
             'birthday',
             'is_active', 'is_superuser')
 
@@ -66,8 +64,8 @@ class UserAdmin(admin.ModelAdmin, DynamicArrayMixin):
     list_display = ('email', 'birthday', 'is_superuser')
     list_filter = ('is_superuser',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('birthday',)}),
+        (None, {'fields': ('username', 'email', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'birthday', 'nationality')}),
         ('Permissions', {'fields': ('is_superuser',)}),
     )
 
@@ -122,9 +120,13 @@ class FlashcardAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin):
     pass
 
+class UserPromptScoreAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Prompt, PromptAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Flashcard, FlashcardAdmin)
+admin.site.register(UserPromptScore, UserPromptScoreAdmin)

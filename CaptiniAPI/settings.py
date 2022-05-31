@@ -29,13 +29,13 @@ DEBUG = True
 ALLOWED_HOSTS = ["0.0.0.0"]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
+    "http://localhost:4200",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://hidden-hamlet-75709.herokuapp.com',
+    "https://hidden-hamlet-75709.herokuapp.com",
 ]
 
 
@@ -50,8 +50,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "languages",
-    'django_better_admin_arrayfield',
+    "django_better_admin_arrayfield",
     "rest_framework",
+    "django_rest_passwordreset",
     "rest_framework.authtoken",
     "corsheaders",
     "captini",
@@ -91,7 +92,7 @@ ROOT_URLCONF = "CaptiniAPI.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates/',],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -101,6 +102,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
             ],
         },
+        
     },
 ]
 
@@ -140,11 +142,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'captini.User'
+AUTH_USER_MODEL = "captini.User"
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend'
+    "django.contrib.auth.backends.ModelBackend"
 ]
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIT_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = ''
+DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
 
 
 # Internationalization
