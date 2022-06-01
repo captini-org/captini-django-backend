@@ -109,8 +109,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
+        return self.request.user
 
     def update(self, request, *args, **kwargs):
         self.object = self.get_object()
