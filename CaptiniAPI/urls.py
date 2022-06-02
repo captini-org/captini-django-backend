@@ -23,5 +23,4 @@ urlpatterns = [
     path("", include('captini.urls')),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("admin/", admin.site.urls),
-    path('', TemplateView.as_view(template_name="home.html"), name='home'),
 ]
