@@ -73,7 +73,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            age=validated_data['birthday'],
             #spoken_languages=validated_data['spoken_languages'],
             nationality=validated_data['nationality'],
             birthday=validated_data['birthday']
