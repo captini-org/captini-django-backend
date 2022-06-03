@@ -6,14 +6,14 @@ from django.contrib.auth.password_validation import validate_password
 
 
 
-class UserPromptScoreSerializer(serializers.Serializer):
+class UserPromptScoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserPromptScore
         fields = ['id', 'lesson_topic', 'prompt_identifier', 'score']
         ordering = ['-id']
 
-class UserSerializer(serializers.ModelSerializer):
+class UserDetailsSerializer(serializers.ModelSerializer):
     user_prompt_score = UserPromptScoreSerializer(many=True)
 
     class Meta:
@@ -28,13 +28,26 @@ class UserSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_active",
             "nationality",
-            #"spoken_languages",
             "birthday",
             "score",
             "global_rank",
             "country_rank",
-            "progress",
             "user_prompt_score",
+        ]
+        ordering = ['-id']
+
+
+class UserListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "url",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
         ]
         ordering = ['-id']
 
@@ -73,7 +86,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            age=validated_data['birthday'],
             #spoken_languages=validated_data['spoken_languages'],
             nationality=validated_data['nationality'],
             birthday=validated_data['birthday']
