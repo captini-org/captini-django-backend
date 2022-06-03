@@ -87,12 +87,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     #        max_length=50, blank=True
     #    )
     #)
-    progress = ArrayField(
-        models.IntegerField
-        (
-            blank=True
-        ), blank=True
-    )
     email = models.EmailField(_("email address"), blank=False, unique=True)
     is_staff = models.BooleanField(
         _("staff status"),
@@ -182,6 +176,9 @@ class UserPromptScore(models.Model):
 
     class Meta:
         ordering = ['prompt_identifier']
+
+    def __str__(self):
+        return self.prompt_identifier
 
 
 @receiver(reset_password_token_created)

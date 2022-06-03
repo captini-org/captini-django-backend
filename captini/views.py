@@ -56,7 +56,7 @@ class UserList(viewsets.ModelViewSet):
     List all users
     """
     queryset = User.objects.all().order_by('id')
-    serializer_class = UserSerializer
+    serializer_class = UserListSerializer
 
     def get(self, request, *args, **kwargs):
         user = self.get_object()
@@ -65,7 +65,7 @@ class UserList(viewsets.ModelViewSet):
 class UserDetails(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserDetailsSerializer
 
 class UserCreate(generics.CreateAPIView):
     
