@@ -1,4 +1,4 @@
-from captini.models import User, Topic, Lesson, Flashcard, Prompt, Task, UserPromptScore
+from captini.models import User, Topic, Lesson, Prompt, Task, UserPromptScore
 from rest_framework import serializers
 
 from rest_framework.validators import UniqueValidator
@@ -104,12 +104,6 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)         
 
-class FlashcardSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Flashcard
-        fields = ['id', 'prompt_identifier', 'text']
-        ordering = ['-id']
 
 class TaskSerializer(serializers.ModelSerializer):
 
@@ -119,12 +113,11 @@ class TaskSerializer(serializers.ModelSerializer):
         ordering = ['-id']
 
 class PromptSerializer(serializers.ModelSerializer):
-    flashcards = FlashcardSerializer()
     tasks = TaskSerializer(many=True)
 
     class Meta:
         model = Prompt
-        fields = ['id', 'prompt_identifier', 'prompt_description', 'tasks', 'flashcards']
+        fields = ['id', 'prompt_identifier', 'prompt_description', 'tasks']
         ordering = ['-id']
          
 
