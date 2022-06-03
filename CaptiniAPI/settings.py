@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import datetime
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://hidden-hamlet-75709.herokuapp.com",
 ]
 
+
+# define if on heroku environment
+ON_HEROKU = 'ON_HEROKU' in os.environ
 
 # Application definition
 

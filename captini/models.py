@@ -11,6 +11,7 @@ from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
 import uuid
+import os
 
 import jwt
 
@@ -184,7 +185,13 @@ class UserPromptScore(models.Model):
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-    email_plaintext_message = "{}?token={}".format('http://127.0.0.1:8000/api/password_reset/confirm' , reset_password_token.key)
+
+    
+    if 'ON_HEROKU' in os.environ:
+        email_plaintext_message = "{}?token={}".format('https://hidden-hamlet-75709.herokuapp.com/api/password_reset/confirm' , reset_password_token.key)
+    else:
+        email_plaintext_message = "{}?token={}".format('http://127.0.0.1:8000/api/password_reset/confirm' , reset_password_token.key)
+
 
     send_mail(
         # title:
