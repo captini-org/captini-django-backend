@@ -29,7 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "nationality",
             #"spoken_languages",
-            "location",
             "birthday",
             "score",
             "global_rank",
@@ -59,7 +58,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             'last_name', 
             'nationality',
             #"spoken_languages",
-            'location',
             'birthday'
             ]
 
@@ -78,7 +76,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             age=validated_data['birthday'],
             #spoken_languages=validated_data['spoken_languages'],
             nationality=validated_data['nationality'],
-            location=validated_data['location'],
             birthday=validated_data['birthday']
         )
 
