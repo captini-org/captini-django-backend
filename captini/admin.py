@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib import admin
-from .models import User, Topic, Lesson, Prompt, Flashcard, Task, UserPromptScore
+from .models import User, Topic, Lesson, Prompt, Task, UserPromptScore
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+import nested_admin
+
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
@@ -105,28 +107,26 @@ class UserAdmin(admin.ModelAdmin, DynamicArrayMixin):
 #
 #    inlines = [PromptInline]
 
-class TopicAdmin(admin.ModelAdmin):
-    pass
+class TaskInline(nested_admin.NestedTabularInline):
+    model = Task
+    extra = 0
 
-class PromptAdmin(admin.ModelAdmin):
-    pass
+class PromptInline(nested_admin.NestedTabularInline):
+    model = Prompt
+    inlines = [TaskInline]
+    extra = 0
 
-class LessonAdmin(admin.ModelAdmin):
-    pass
+class LessonInline(nested_admin.NestedTabularInline):
+    model = Lesson
+    inlines = [PromptInline]
 
-class FlashcardAdmin(admin.ModelAdmin):
-    pass
+class TopicAdmin(nested_admin.NestedModelAdmin):
 
-class TaskAdmin(admin.ModelAdmin):
-    pass
+    inlines = [LessonInline]
 
 class UserPromptScoreAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Topic, TopicAdmin)
-admin.site.register(Lesson, LessonAdmin)
-admin.site.register(Prompt, PromptAdmin)
-admin.site.register(Task, TaskAdmin)
-admin.site.register(Flashcard, FlashcardAdmin)
 admin.site.register(UserPromptScore, UserPromptScoreAdmin)

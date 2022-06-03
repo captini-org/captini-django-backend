@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "languages",
+    'nested_admin',
     "django_better_admin_arrayfield",
     "rest_framework",
     "django_rest_passwordreset",

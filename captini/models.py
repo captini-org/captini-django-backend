@@ -136,48 +136,52 @@ class TopicNameField(models.CharField):
 
 class Topic(models.Model):
     topic_name = TopicNameField(max_length=100, default="")
+    topic_description = models.TextField(max_length=254, default="")
     level = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['id']
+
+    def __str__(self):
+        return self.topic_name
     
 
 class Lesson(models.Model):
     topic = models.ForeignKey(Topic, related_name='lessons', on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
-    description = models.CharField(max_length=254)
+    description = models.TextField(max_length=254)
 
     class Meta:
         ordering = ['id']
+
+    def __str__(self):
+        return self.subject
 
 class Prompt(models.Model):
     Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
-    prompt_description = models.CharField(_("prompt description"), max_length=200, blank=True)
     prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
+    flashcard_text = models.TextField(_("flashcard text"),max_length=500, default="", blank=True)
 
     class Meta:
         ordering = ['id']
+
+    def __str__(self):
+        return self.prompt_identifier
 
 class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
     prompt_identifier = models.CharField(max_length=25, blank=False)
-    task_text = models.TextField(_("task text"), max_length=255)
+    task_text = models.CharField(_("task text"), max_length=255)
     audio_url = models.CharField(_("audio url"), blank=True, max_length=500)
-
-class Flashcard(models.Model):
-    prompt = models.OneToOneField(Prompt, related_name="flashcards", on_delete=models.CASCADE)
-    prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
-    text = models.CharField(_("flashcard text"),max_length=500, default="", blank=True)
-
-    class Meta:
-        ordering = ['id']
-
 
 class UserPromptScore(models.Model):
     user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
     lesson_topic = models.CharField(max_length = 255, blank=False)
     prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
     score = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['prompt_identifier']
 
 
 @receiver(reset_password_token_created)
