@@ -165,7 +165,6 @@ class Prompt(models.Model):
 
 class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
-    prompt_identifier = models.CharField(max_length=25, blank=False)
     task_text = models.CharField(_("task text"), max_length=255)
     audio_url = models.CharField(_("audio url"), blank=True, max_length=500)
 

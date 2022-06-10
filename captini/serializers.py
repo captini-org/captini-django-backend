@@ -118,7 +118,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'prompt_identifier', 'task_text', 'audio_url']
+        fields = ['id', 'task_text', 'audio_url']
         ordering = ['-id']
 
 class PromptSerializer(serializers.ModelSerializer):
@@ -126,7 +126,7 @@ class PromptSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prompt
-        fields = ['id', 'prompt_identifier', 'prompt_description', 'tasks']
+        fields = ['id', 'prompt_identifier', 'tasks']
         ordering = ['-id']
          
 
