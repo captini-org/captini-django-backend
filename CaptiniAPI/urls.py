@@ -22,5 +22,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path("", include('captini.urls')),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path('api/', include(('captini.routers', 'captini'), namespace='captini-api')),
     path("admin/", admin.site.urls),
 ]
