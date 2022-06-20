@@ -10,6 +10,13 @@ from captini.models import User, Topic
 from rest_framework import status
 from django.http import Http404, request
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from captini.serializers import LoginSerializer, RegisterSerializer
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -67,10 +74,10 @@ class UserDetails(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailsSerializer
 
-class UserCreate(generics.CreateAPIView):
-    
-    queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+#class UserCreate(generics.CreateAPIView):
+#    
+#    queryset = User.objects.all()
+#    serializer_class = RegisterSerializer
 
 #class UserProgress(generics.ListAPIView):
 #    lesson_id_list = self.request.user.lesson_id_list
@@ -78,22 +85,73 @@ class UserCreate(generics.CreateAPIView):
 #    queryset = Lesson.objects.filter(pk__in=lesson_id_list)
 #    serializer_class = LessonSerializer
 
-class UserLogin(generics.GenericAPIView):
+#class UserLogin(generics.GenericAPIView):
+#
+#    serializer_class = LoginSerializer
+#
+#    def post(self,request):
+#        data = request.data
+#        username = data.get('username')
+#        password = data.get('password')
+#        user = authenticate(username=username, password=password)
+#        if user is not None:
+#            serializer = self.serializer_class(user)
+#            print(serializer.data)
+#            login(request, user)
+#            return Response(serializer.data, status=status.HTTP_200_OK)
+#        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+class LoginViewSet(ModelViewSet, TokenObtainPairView):
     serializer_class = LoginSerializer
+    permission_classes = (AllowAny,)
+    http_method_names = ['post']
 
-    def post(self,request):
-        data = request.data
-        username = data.get('username')
-        password = data.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            serializer = self.serializer_class(user)
-            print(serializer.data)
-            login(request, user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
 
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
+    serializer_class = RegisterSerializer
+    permission_classes = (AllowAny,)
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        refresh = RefreshToken.for_user(user)
+        res = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+
+        return Response({
+            "user": serializer.data,
+            "refresh": res["refresh"],
+            "token": res["access"]
+        }, status=status.HTTP_201_CREATED)
+
+class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
+    permission_classes = (AllowAny,)
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 def user_logout(request):
     logout(request)
