@@ -31,12 +31,14 @@ ALLOWED_HOSTS = ["0.0.0.0"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
+    "https://e-captini.herokuapp.com",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://hidden-hamlet-75709.herokuapp.com",
+    "https://e-captini.herokuapp.com",
 ]
 
 
