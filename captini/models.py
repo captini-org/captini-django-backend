@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 from .forms import ChoiceArrayField
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from datetime import datetime
+from datetime import date
 from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -81,7 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    birthday = models.DateField(auto_now=False, default=datetime.now)
+    birthday = models.DateField(auto_now=False, default=date.today)
     nationality = models.CharField(max_length=254)
     #spoken_languages = ArrayField(
     #    models.CharField(
