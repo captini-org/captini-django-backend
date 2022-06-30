@@ -149,32 +149,32 @@ class Lesson(models.Model):
 
 class Prompt(models.Model):
     Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
-    prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
+    prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     flashcard_text = models.TextField(_("flashcard text"),max_length=500, default="", blank=True)
 
     class Meta:
         ordering = ['id']
 
     def __str__(self):
-        return self.prompt_identifier
+        return self.prompt_number
 
 class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
-    prompt_identifier = models.CharField(max_length=25, blank=False)
+    prompt_number = models.CharField(max_length=25, blank=False)
     task_text = models.CharField(_("task text"), max_length=255)
     audio_url = models.CharField(_("audio url"), blank=True, max_length=500)
 
 class UserPromptScore(models.Model):
     user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
     lesson_topic = models.CharField(max_length = 255, blank=False)
-    prompt_identifier = models.CharField(max_length=25, blank=False, unique=True)
+    prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     score = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ['prompt_identifier']
+        ordering = ['prompt_number']
 
     def __str__(self):
-        return self.prompt_identifier
+        return self.prompt_number
 
 
 @receiver(reset_password_token_created)
