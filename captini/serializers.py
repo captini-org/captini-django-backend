@@ -1,10 +1,20 @@
 from captini.models import User, Topic, Lesson, Prompt, Task, UserPromptScore
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.settings import api_settings
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
+
+from django.contrib.auth.models import update_last_login
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
 
+
+factory = APIRequestFactory()
+request = factory.get('/')
 
 class UserPromptScoreSerializer(serializers.ModelSerializer):
 
@@ -81,28 +91,32 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            #spoken_languages=validated_data['spoken_languages'],
-            nationality=validated_data['nationality'],
-            birthday=validated_data['birthday']
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
-
+        try:
+            user = User.objects.get(email=validated_data['email'])
+        except ObjectDoesNotExist:
+            user = User.objects.create_user(**validated_data)
         return user
 
-class LoginSerializer(serializers.ModelSerializer):
 
-     class Meta:
-         model = User
-         fields = ('id', 'username', 'password', 'token')
+class LoginSerializer(TokenObtainPairSerializer):
 
-         read_only_fields=['id', 'token']
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        serializer_context = {
+            'request': Request(request),
+        }
+
+        refresh = self.get_token(self.user)
+
+        data['user'] = UserDetailsSerializer(instance=self.user, context=serializer_context).data
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
+
+        return data
 
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
@@ -118,7 +132,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'prompt_identifier', 'task_text', 'audio_url']
+        fields = ['id', 'prompt_number', 'task_text', 'audio_url']
         ordering = ['-id']
 
 class PromptSerializer(serializers.ModelSerializer):
@@ -126,7 +140,7 @@ class PromptSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prompt
-        fields = ['id', 'prompt_identifier', 'prompt_description', 'tasks']
+        fields = ['id', 'prompt_number', 'tasks']
         ordering = ['-id']
          
 
