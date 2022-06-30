@@ -62,6 +62,7 @@ class UserList(viewsets.ModelViewSet):
     """
     List all users
     """
+    
     queryset = User.objects.all().order_by('id')
     serializer_class = UserListSerializer
 
@@ -73,6 +74,7 @@ class UserDetails(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserDetailsSerializer
+    permission_classes = (IsAuthenticated,)
 
 #class UserCreate(generics.CreateAPIView):
 #    
@@ -155,7 +157,7 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 
 def user_logout(request):
     logout(request)
-    return redirect('/users/login')
+    return redirect('/api/auth/login/')
 
 
 class ChangePasswordView(generics.UpdateAPIView):

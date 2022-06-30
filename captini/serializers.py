@@ -2,6 +2,9 @@ from captini.models import User, Topic, Lesson, Prompt, Task, UserPromptScore
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
+
 from django.contrib.auth.models import update_last_login
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -9,6 +12,9 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
 
+
+factory = APIRequestFactory()
+request = factory.get('/')
 
 class UserPromptScoreSerializer(serializers.ModelSerializer):
 
@@ -97,9 +103,13 @@ class LoginSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
 
+        serializer_context = {
+            'request': Request(request),
+        }
+
         refresh = self.get_token(self.user)
 
-        data['user'] = UserSerializer(self.user).data
+        data['user'] = UserDetailsSerializer(instance=self.user, context=serializer_context).data
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
 
@@ -122,7 +132,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'prompt_identifier', 'task_text', 'audio_url']
+        fields = ['id', 'prompt_number', 'task_text', 'audio_url']
         ordering = ['-id']
 
 class PromptSerializer(serializers.ModelSerializer):
@@ -130,7 +140,7 @@ class PromptSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Prompt
-        fields = ['id', 'prompt_identifier', 'prompt_description', 'tasks']
+        fields = ['id', 'prompt_number', 'tasks']
         ordering = ['-id']
          
 
