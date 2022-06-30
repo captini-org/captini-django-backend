@@ -76,7 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(_("first name"), max_length=150, blank=True)
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
-    birthday = models.DateField(_("Date"), auto_now=False, default=date.today)
+    birthday = models.DateField(auto_now=False, default=date.today)
     nationality = models.CharField(max_length=254)
     #spoken_languages = ArrayField(
     #    models.CharField(
