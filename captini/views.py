@@ -16,7 +16,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from captini.serializers import LoginSerializer, RegisterSerializer
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -70,38 +69,29 @@ class UserList(viewsets.ModelViewSet):
         user = self.get_object()
         return Response(user)
 
-class UserDetails(generics.RetrieveAPIView):
+class UserDetails(generics.RetrieveUpdateAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserDetailsSerializer
+
+class UploadAudio(generics.CreateAPIView):
+
+    serializer_class = AudioRecordingsSerializer
     permission_classes = (IsAuthenticated,)
+    http_method_names = ['post']
 
-#class UserCreate(generics.CreateAPIView):
-#    
-#    queryset = User.objects.all()
-#    serializer_class = RegisterSerializer
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid:
+            recording = serializer.save(user=request.user, task=self.kwargs['pk'])
 
-#class UserProgress(generics.ListAPIView):
-#    lesson_id_list = self.request.user.lesson_id_list
-#    print(lesson_id_list)
-#    queryset = Lesson.objects.filter(pk__in=lesson_id_list)
-#    serializer_class = LessonSerializer
-
-#class UserLogin(generics.GenericAPIView):
-#
-#    serializer_class = LoginSerializer
-#
-#    def post(self,request):
-#        data = request.data
-#        username = data.get('username')
-#        password = data.get('password')
-#        user = authenticate(username=username, password=password)
-#        if user is not None:
-#            serializer = self.serializer_class(user)
-#            print(serializer.data)
-#            login(request, user)
-#            return Response(serializer.data, status=status.HTTP_200_OK)
-#        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except AuthenticationError as e:
+            raise NotAuthenticatedException(e.args[0])
+        
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 class LoginViewSet(ModelViewSet, TokenObtainPairView):
     serializer_class = LoginSerializer
@@ -124,7 +114,7 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
     permission_classes = (AllowAny,)
     http_method_names = ['post']
 
-    def create(self, request, *args, **kwargs):
+    def create(self, validated_data):
         serializer = self.get_serializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)

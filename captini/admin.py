@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from .models import User, Topic, Lesson, Prompt, Task, UserPromptScore
+from .models import User, Topic, Lesson, Prompt, Task, UserPromptScore, UserAudioRecordings
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 import nested_admin
 
@@ -127,6 +127,10 @@ class TopicAdmin(nested_admin.NestedModelAdmin):
 class UserPromptScoreAdmin(admin.ModelAdmin):
     pass
 
+class UserAudioRecordingsAdmin(admin.ModelAdmin):
+    model = UserAudioRecordings
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(UserPromptScore, UserPromptScoreAdmin)
+admin.site.register(UserAudioRecordings, UserAudioRecordingsAdmin)

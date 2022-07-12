@@ -177,6 +177,19 @@ class UserPromptScore(models.Model):
         return self.prompt_number
 
 
+class UserAudioRecordings(models.Model):
+    user = models.ForeignKey(User, related_name='user_audio_recordings', on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, related_name='task_audio_recordings', on_delete=models.CASCADE)
+    prompt_number = models.CharField(max_length=25, blank=False, unique=True)
+    binary_audio = models.BinaryField(blank=False, null=False)
+
+    class Meta:
+        ordering = ['user', 'task']
+
+    def __str__(self):
+        return self.id
+
+
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 

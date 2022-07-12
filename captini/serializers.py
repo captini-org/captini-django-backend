@@ -1,4 +1,4 @@
-from captini.models import User, Topic, Lesson, Prompt, Task, UserPromptScore
+from captini.models import User, Topic, Lesson, Prompt, Task, UserPromptScore, UserAudioRecordings
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.settings import api_settings
@@ -11,8 +11,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
-
-
 factory = APIRequestFactory()
 request = factory.get('/')
 
@@ -24,7 +22,6 @@ class UserPromptScoreSerializer(serializers.ModelSerializer):
         ordering = ['-id']
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    user_prompt_score = UserPromptScoreSerializer(many=True)
 
     class Meta:
         model = User
@@ -42,7 +39,6 @@ class UserDetailsSerializer(serializers.ModelSerializer):
             "score",
             "global_rank",
             "country_rank",
-            "user_prompt_score",
         ]
         ordering = ['-id']
 
@@ -62,6 +58,8 @@ class UserListSerializer(serializers.ModelSerializer):
         ordering = ['-id']
 
 class RegisterSerializer(serializers.ModelSerializer):
+
+    birthday = serializers.DateField(format="%d-%m-%Y", input_formats=['%d-%m-%Y', 'iso-8601'])
     
     email = serializers.EmailField(
             required=True,
@@ -80,7 +78,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             'first_name', 
             'last_name', 
             'nationality',
-            #"spoken_languages",
             'birthday'
             ]
 
@@ -161,21 +158,9 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = ['id', 'topic_name', 'level', 'lessons']
         ordering = ['-id']
 
+class  AudioRecordingsSerializer(serializers.ModelSerializer):
 
-    #def create(self, validated_data):
-    #    topic_data = validated_data.pop('lessons')
-    #    topic = Topic.objects.create(**validated_data)
-    #    for lesson_data in topic_data:
-    #        Lesson.objects.create(topic=topic, **lesson_data)
-    #    return topic
+    class Meta:
+        model = UserAudioRecordings
+        fields = ['id', 'binary_audio']
 
-#class LessonsCompletedSerializer(serializers.ModelSerializer):
-#    user = request.user
-#    lesson_id_list = user.get('progress')
-#    print(lesson_id_list)
-#    prompts = PromptSerializer(many=True)
-
-#    class Meta:
-#        model = Lesson
-#        fields = ['id', 'subject', 'description', 'prompts']
-#
