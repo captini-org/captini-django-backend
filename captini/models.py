@@ -1,20 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.contrib.postgres.fields import ArrayField
-from .forms import ChoiceArrayField
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
-from datetime import date
 from django.dispatch import receiver
-from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
-import uuid
 import os
 
-import jwt
-
+from account.models import User
 from django.conf import settings
 
 # Create your models here.
@@ -114,7 +105,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 {'username': self.usernames, 'email': self.email,
                     'exp':datetime.utcnow() + timedelta(hours=24)},
                 settings.SECRET_KEY, algorithm='HS256')
-            
+
             return token
 
 class TopicNameField(models.CharField):
@@ -125,13 +116,10 @@ class TopicNameField(models.CharField):
         return str(value).lower()
 
 class Topic(models.Model):
-    topic_name = TopicNameField(max_length=100, default="")
-    topic_description = models.TextField(max_length=254, default="")
+    topic_name = TopicNameField(max_length=100)
+    topic_description = models.TextField(max_length=254)
     level = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ['id']
-
+    
     def __str__(self):
         return self.topic_name
     
@@ -141,9 +129,6 @@ class Lesson(models.Model):
     subject = models.CharField(max_length=100)
     description = models.TextField(max_length=254)
 
-    class Meta:
-        ordering = ['id']
-
     def __str__(self):
         return self.subject
 
@@ -151,9 +136,6 @@ class Prompt(models.Model):
     Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     flashcard_text = models.TextField(_("flashcard text"),max_length=500, default="", blank=True)
-
-    class Meta:
-        ordering = ['id']
 
     def __str__(self):
         return self.prompt_number
@@ -169,9 +151,6 @@ class UserPromptScore(models.Model):
     lesson_topic = models.CharField(max_length = 255, blank=False)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     score = models.IntegerField(default=0)
-
-    class Meta:
-        ordering = ['prompt_number']
 
     def __str__(self):
         return self.prompt_number

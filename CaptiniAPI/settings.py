@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import datetime
+from datetime import timedelta
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +48,8 @@ ON_HEROKU = 'ON_HEROKU' in os.environ
 # Application definition
 
 INSTALLED_APPS = [
+    "captini",
+    "account",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -61,27 +63,18 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_rest_passwordreset",
     "corsheaders",
-    "captini",
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 100,
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    # "PAGE_SIZE": 100,
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
 
-}
-
-JWT_AUTH = {
- 
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
- 
 }
 
 MIDDLEWARE = [
@@ -125,10 +118,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "captini",
-        "USER": "postgres",
-        "PASSWORD": "",
+        "USER": "django",
         "HOST": "localhost",
-        "PORT": "5432",
+        "PASSWORD": "django",
+        "PORT": "5432"
     }
 }
 
@@ -151,11 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "captini.User"
-
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend"
-]
+AUTH_USER_MODEL = "account.User"
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -190,3 +179,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 import django_heroku
 django_heroku.settings(locals())
+
+SIMPLE_JWT = {
+    'ROTATE_REFRESH_TOKENS': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
