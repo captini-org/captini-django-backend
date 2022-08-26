@@ -1,13 +1,25 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
 
-from captini.models import User, Topic, Lesson, Prompt, Task, UserPromptScore
-from captini.api.serializers import TopicSerializer, LessonSerializer, PromptSerializer, TaskSerializer
+from captini.models import (
+    User,
+    Topic,
+    Lesson,
+    Prompt,
+    Task,
+    UserTaskRecording,
+)
+from captini.api.serializers import (
+    TopicSerializer,
+    LessonSerializer,
+    PromptSerializer,
+    TaskSerializer,
+    TaskRecordingSerializer
+)
 
 
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -18,19 +30,12 @@ from captini.api.serializers import TopicSerializer, LessonSerializer, PromptSer
 # from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 
-
-
-
-
 class TopicList(APIView):
-    
     def get(self, request):
         topics = Topic.objects.all()
-        serializer = TopicSerializer(
-            topics, many=True, context={"request": request}
-        )
+        serializer = TopicSerializer(topics, many=True, context={"request": request})
         return Response(serializer.data)
-    
+
     def post(self, request):
         serializer = TopicSerializer(data=request.data)
         if serializer.is_valid():
@@ -39,8 +44,8 @@ class TopicList(APIView):
         else:
             return Response(serializer.errors)
 
-class TopicDetails(APIView):
 
+class TopicDetails(APIView):
     def get(self, request, pk):
         try:
             topic = Topic.objects.get(pk=pk)
@@ -49,7 +54,7 @@ class TopicDetails(APIView):
             return Response(
                 {"Error": "Topic not found"}, status=status.HTTP_404_NOT_FOUND
             )
-            
+
         serializer = TopicSerializer(topic)
         return Response(serializer.data)
 
@@ -83,6 +88,49 @@ class LessonList(generics.ListCreateAPIView):
 class LessonDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+
+
+class PromptList(generics.ListCreateAPIView):
+    serializer_class = PromptSerializer
+    # permission_classes = [IsAuthenticated]
+    # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ["review_user__username", "active"]
+
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        return Prompt.objects.filter(lesson=pk)
+
+
+class PromptDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Prompt.objects.all()
+    serializer_class = PromptSerializer
+
+
+class TaskList(generics.ListCreateAPIView):
+    serializer_class = TaskSerializer
+    # permission_classes = [IsAuthenticated]
+    # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ["review_user__username", "active"]
+
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        return Task.objects.filter(prompt=pk)
+
+
+class TaskDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+class TaskRecordingUpload(generics.CreateAPIView):
+    serializer_class = TaskRecordingSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        pk = self.kwargs["pk"]
+        return UserTaskRecording.objects.filter(user=user, pk=pk)
 
 
 # class UserList(viewsets.ModelViewSet):
@@ -160,41 +208,3 @@ class LessonDetails(generics.RetrieveUpdateDestroyAPIView):
 # def user_logout(request):
 #     logout(request)
 #     return redirect('/api/auth/login/')
-
-
-# class ChangePasswordView(generics.UpdateAPIView):
-#     """
-#     An endpoint for changing password.
-#     """
-
-#     serializer_class = ChangePasswordSerializer
-#     model = User
-#     permission_classes = (IsAuthenticated,)
-
-#     def get_object(self, queryset=None):
-#         return self.request.user
-
-#     def update(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         serializer = self.get_serializer(data=request.data)
-
-#         if serializer.is_valid():
-#             # Check old password
-#             if not self.object.check_password(serializer.data.get("old_password")):
-#                 return Response(
-#                     {"old_password": ["Wrong password."]},
-#                     status=status.HTTP_400_BAD_REQUEST,
-#                 )
-#             # set_password also hashes the password that the user will get
-#             self.object.set_password(serializer.data.get("new_password"))
-#             self.object.save()
-#             response = {
-#                 "status": "success",
-#                 "code": status.HTTP_200_OK,
-#                 "message": "Password updated successfully",
-#                 "data": [],
-#             }
-
-#             return Response(response)
-
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

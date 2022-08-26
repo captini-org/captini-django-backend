@@ -135,7 +135,7 @@ class Lesson(models.Model):
 class Prompt(models.Model):
     Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
-    flashcard_text = models.TextField(_("flashcard text"),max_length=500, default="", blank=True)
+    flashcard_text = models.TextField(max_length=500, default="", blank=True)
 
     def __str__(self):
         return self.prompt_number
@@ -143,8 +143,8 @@ class Prompt(models.Model):
 class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
     prompt_number = models.CharField(max_length=25, blank=False)
-    task_text = models.CharField(_("task text"), max_length=255)
-    audio_url = models.CharField(_("audio url"), blank=True, max_length=500)
+    task_text = models.CharField(max_length=255)
+    audio_url = models.CharField(blank=True, max_length=500)
 
 class UserPromptScore(models.Model):
     user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
@@ -155,17 +155,20 @@ class UserPromptScore(models.Model):
     def __str__(self):
         return self.prompt_number
 
+class UserTaskRecording(models.Model):
+    user = models.ForeignKey(User, related_name='task_recording', on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, related_name='task_recording', on_delete=models.CASCADE)
+    recording = models.BinaryField()
+    time_created = models.DateTimeField(auto_now_add=True)
+
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
-
-    
     if 'ON_HEROKU' in os.environ:
         email_plaintext_message = "{}?token={}".format('https://hidden-hamlet-75709.herokuapp.com/api/password_reset/confirm' , reset_password_token.key)
     else:
         email_plaintext_message = "{}?token={}".format('http://127.0.0.1:8000/api/password_reset/confirm' , reset_password_token.key)
-
 
     send_mail(
         # title:
