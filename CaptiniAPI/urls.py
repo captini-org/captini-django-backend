@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -25,5 +25,4 @@ urlpatterns = [
     # path('api/', include(('captini.routers', 'captini'), namespace='captini-api')),
     path("admin/", admin.site.urls),
     path("account/", include('account.api.urls')),
-
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -146,6 +146,7 @@ class Task(models.Model):
     task_text = models.CharField(max_length=255)
     audio_url = models.CharField(blank=True, max_length=500)
 
+
 class UserPromptScore(models.Model):
     user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
     lesson_topic = models.CharField(max_length = 255, blank=False)
@@ -155,10 +156,14 @@ class UserPromptScore(models.Model):
     def __str__(self):
         return self.prompt_number
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/{1}'.format(instance.user.id, filename)
+
 class UserTaskRecording(models.Model):
     user = models.ForeignKey(User, related_name='task_recording', on_delete=models.CASCADE)
     task = models.ForeignKey(Task, related_name='task_recording', on_delete=models.CASCADE)
-    recording = models.BinaryField()
+    recording = models.FileField(upload_to=user_directory_path)
     time_created = models.DateTimeField(auto_now_add=True)
 
 
