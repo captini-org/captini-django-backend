@@ -37,7 +37,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://hidden-hamlet-75709.herokuapp.com",
+    "https://captini-backend.herokuapp.com",
     "https://e-captini.herokuapp.com",
 ]
 
