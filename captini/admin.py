@@ -1,13 +1,12 @@
 from django.contrib import admin
-from .models import User, Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording
-import nested_admin
+from .models import Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording
 
 
 
 class TopicAdmin(admin.ModelAdmin):
     pass
 
-class LesosnAdmin(admin.ModelAdmin):
+class LessonsAdmin(admin.ModelAdmin):
     pass
 
 class PromptAdmin(admin.ModelAdmin):
@@ -24,7 +23,7 @@ class UserPromptScoreAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Topic, TopicAdmin)
-admin.site.register(Lesson, LesosnAdmin)
+admin.site.register(Lesson, LessonsAdmin)
 admin.site.register(Prompt, PromptAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(UserTaskRecording, UserTaskRecordingAdmin)

@@ -18,6 +18,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=550)
     last_name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
     birthday = models.DateField(auto_now=False, default=date.today)
     nationality = models.CharField(max_length=254)
     date_joined = models.DateTimeField(auto_now_add=True)
