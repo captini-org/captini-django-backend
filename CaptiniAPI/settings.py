@@ -36,6 +36,16 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOW_HEADERS = (
+        'x-requested-with',
+        'content-type',
+        'accept',
+        'origin',
+        'authorization',
+        'x-csrftoken'
+)
+
+
 CSRF_TRUSTED_ORIGINS = [
     "https://captini-backend.herokuapp.com",
     "https://e-captini.herokuapp.com",
