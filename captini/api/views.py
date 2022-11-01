@@ -29,49 +29,17 @@ from captini.api.serializers import (
 # from rest_framework_simplejwt.tokens import RefreshToken
 # from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
+class TopicList(generics.ListCreateAPIView):
+    serializer_class = TopicSerializer
+    queryset = Topic.objects.all()
+    # permission_classes = [IsAuthenticated]
+    # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ["review_user__username", "active"]
 
-class TopicList(APIView):
-    def get(self, request):
-        topics = Topic.objects.all()
-        serializer = TopicSerializer(topics, many=True, context={"request": request})
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = TopicSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
-
-
-class TopicDetails(APIView):
-    def get(self, request, pk):
-        try:
-            topic = Topic.objects.get(pk=pk)
-            print(topic)
-        except Topic.DoesNotExist:
-            return Response(
-                {"Error": "Topic not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-
-        serializer = TopicSerializer(topic)
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        topic = Topic.objects.get(pk=pk)
-        serializer = TopicSerializer(topic, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors)
-
-    def delete(self, request, pk):
-        topic = Topic.objects.get(pk=pk)
-        topic.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+class TopicDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
 class LessonList(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
@@ -88,7 +56,6 @@ class LessonList(generics.ListCreateAPIView):
 class LessonDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-
 
 class PromptList(generics.ListCreateAPIView):
     serializer_class = PromptSerializer

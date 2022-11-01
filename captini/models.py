@@ -133,7 +133,7 @@ class Lesson(models.Model):
         return self.subject
 
 class Prompt(models.Model):
-    Lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     flashcard_text = models.TextField(max_length=500, default="", blank=True)
 

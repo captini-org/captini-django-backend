@@ -2,10 +2,6 @@ from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTa
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
 
-
-
-
-
 factory = APIRequestFactory()
 request = factory.get('/')
 

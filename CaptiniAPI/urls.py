@@ -21,8 +21,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("captini/", include('captini.api.urls')),
-    # path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    # path('api/', include(('captini.routers', 'captini'), namespace='captini-api')),
     path("admin/", admin.site.urls),
     path("account/", include('account.api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
