@@ -146,6 +146,8 @@ class Task(models.Model):
     task_text = models.CharField(max_length=255)
     audio_url = models.CharField(blank=True, max_length=500)
 
+    def __str__(self):
+        return self.task_text
 
 class UserPromptScore(models.Model):
     user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
