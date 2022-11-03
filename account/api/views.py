@@ -8,7 +8,7 @@ from account.api.serializers import RegistrationSerializer
 from account import models
 from account.api.serializers import UserSerializer
 from captini.api.permissions import *
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 
 @api_view(
     [
@@ -57,11 +57,12 @@ def registration_view(request):
 
 
 class UserList(generics.ListAPIView):
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
     queryset = models.User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetails(generics.RetrieveAPIView):
+    permission_classes = [IsLoggedInUserOrReadOnly]
     queryset = models.User.objects.all()
     serializer_class = UserSerializer

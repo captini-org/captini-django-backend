@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
 
+from captini.api.permissions import *
+
 from captini.models import (
     User,
     Topic,
@@ -32,7 +34,7 @@ from captini.api.serializers import (
 class TopicList(generics.ListCreateAPIView):
     serializer_class = TopicSerializer
     queryset = Topic.objects.all()
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
     # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ["review_user__username", "active"]
@@ -43,7 +45,7 @@ class TopicDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class LessonList(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
     # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ["review_user__username", "active"]
@@ -59,7 +61,7 @@ class LessonDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class PromptList(generics.ListCreateAPIView):
     serializer_class = PromptSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
     # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ["review_user__username", "active"]
@@ -76,7 +78,7 @@ class PromptDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class TaskList(generics.ListCreateAPIView):
     serializer_class = TaskSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
     # throttle_classes = [ReviewListthrottle, AnonRateThrottle]
     # filter_backends = [DjangoFilterBackend]
     # filterset_fields = ["review_user__username", "active"]
@@ -93,6 +95,8 @@ class TaskDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class TaskRecordingUpload(generics.CreateAPIView):
     serializer_class = TaskRecordingSerializer
+    permission_classes = [IsAuthenticated]
+
 
     def get_queryset(self):
         user = self.request.user
