@@ -25,6 +25,9 @@ class User(AbstractUser):
     score = models.IntegerField(default=0)
     global_rank = models.IntegerField(default=0)
     country_rank = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return str(self.id, self.username)
 
 
 # @receiver(post_save, sender=settings.AUTH_USER_MODEL)

@@ -2,9 +2,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 
-from account.api.serializers import RegistrationSerializer
+from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSerializer
 from account import models
 from account.api.serializers import UserSerializer
 from captini.api.permissions import *
@@ -66,3 +67,6 @@ class UserDetails(generics.RetrieveAPIView):
     permission_classes = [IsLoggedInUserOrReadOnly]
     queryset = models.User.objects.all()
     serializer_class = UserSerializer
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
