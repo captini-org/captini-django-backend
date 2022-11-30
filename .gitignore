@@ -1,5 +1,7 @@
 venv/
 
+.env
+
 # Django stuff:
 *.log
 *.pot
