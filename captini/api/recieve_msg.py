@@ -1,8 +1,10 @@
+from django.conf import settings
+
 import pika, sys, os
 
 def main():
     connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+    pika.ConnectionParameters(host=settings.RABBITMQ_HOST))
     channel = connection.channel()
 
     channel.exchange_declare(exchange='topic_logs', exchange_type='topic')

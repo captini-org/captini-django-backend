@@ -129,11 +129,11 @@ WSGI_APPLICATION = "CaptiniAPI.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "captini",
-        "USER": "django",
-        "HOST": "localhost",
-        "PASSWORD": "django",
-        "PORT": "5432"
+        "NAME": os.environ.get("DATABASE_NAME", "captini"),
+        "USER": os.environ.get("DATABASE_USER", "django"),
+        "HOST": os.environ.get("DATABASE_HOST", "db"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "django"),
+        "PORT": os.environ.get("DATABASE_PORT", "5432"),
     }
 }
 
@@ -164,7 +164,7 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIT_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini"),
 DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
 
 
@@ -201,3 +201,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=100),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+RABBITMQ_HOST = "rabbitmq"
