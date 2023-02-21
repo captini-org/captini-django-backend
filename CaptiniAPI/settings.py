@@ -39,6 +39,7 @@ ALLOWED_HOSTS = ["0.0.0.0"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "https://e-captini.herokuapp.com",
+    "https://captini.tullius.dev",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -56,6 +57,7 @@ CORS_ALLOW_HEADERS = (
 CSRF_TRUSTED_ORIGINS = [
     "https://captini-backend.herokuapp.com",
     "https://e-captini.herokuapp.com",
+    "https://captini.tullius.dev",
 ]
 
 
@@ -202,4 +204,5 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-RABBITMQ_HOST = "rabbitmq"
+RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
+RABBITMQ_EXCHANGE = os.environ.get("RABBITMQ_EXCHANGE", "captini")
