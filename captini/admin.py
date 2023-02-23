@@ -4,26 +4,32 @@ from .models import Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecord
 
 
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ('topic_name', 'topic_description', 'level')
+    list_display = ('topic_name', 'topic_description', 'number')
+    ordering = ['number']
 
 class LessonsAdmin(admin.ModelAdmin):
-    list_display = ('topic', 'subject', 'description')
+    list_display = ('topic', 'subject', 'description', 'number')
+    ordering = ['number']
 
 
 class PromptAdmin(admin.ModelAdmin):
-    list_display = ('lesson', 'prompt_number')
+    list_display = ('lesson', 'prompt_number', 'number')
+    ordering = ['number']
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('prompt', 'prompt_number', 'task_text', 'audio_url')
+    list_display = ('prompt', 'task_text', 'audio_url', 'number')
+    ordering = ['number']
 
 
 class UserTaskRecordingAdmin(admin.ModelAdmin):
     list_display = ('user', 'task', 'recording', 'time_created')
+    ordering = ['time_created']
 
 
 class UserPromptScoreAdmin(admin.ModelAdmin):
     list_display = ('user', 'lesson_topic', 'prompt_number', 'score')
+    ordering = ['prompt_number']
 
 
 admin.site.register(Topic, TopicAdmin)

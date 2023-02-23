@@ -17,7 +17,7 @@ class TopicNameField(models.CharField):
 class Topic(models.Model):
     topic_name = TopicNameField(max_length=100)
     topic_description = models.TextField(max_length=254)
-    level = models.IntegerField(default=0)
+    number = models.IntegerField(default=0)
     
     def __str__(self):
         return self.topic_name
@@ -27,6 +27,7 @@ class Lesson(models.Model):
     topic = models.ForeignKey(Topic, related_name='lessons', on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
     description = models.TextField(max_length=254)
+    number = models.IntegerField(default=0)
 
     def __str__(self):
         return self.subject
@@ -35,15 +36,16 @@ class Prompt(models.Model):
     lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     flashcard_text = models.TextField(max_length=500, default="", blank=True)
+    number = models.IntegerField(default=0)
 
     def __str__(self):
         return self.prompt_number
 
 class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
-    prompt_number = models.CharField(max_length=25, blank=False)
     task_text = models.CharField(max_length=255)
     audio_url = models.CharField(blank=True, max_length=500)
+    number = models.IntegerField(default=0)
 
     def __str__(self):
         return self.task_text
