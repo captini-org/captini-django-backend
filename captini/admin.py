@@ -19,7 +19,7 @@ class PromptAdmin(admin.ModelAdmin):
 
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('prompt', 'task_text', 'audio_url', 'number')
-    ordering = ['number']
+    ordering = ['prompt']
 
 
 class UserTaskRecordingAdmin(admin.ModelAdmin):
