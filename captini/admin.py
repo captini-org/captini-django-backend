@@ -4,31 +4,31 @@ from .models import Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecord
 
 
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ('topic_name', 'topic_description', 'number')
+    list_display = ('id', 'topic_name', 'topic_description', 'number')
     ordering = ['number']
 
 class LessonsAdmin(admin.ModelAdmin):
-    list_display = ('topic', 'subject', 'description', 'number')
+    list_display = ('id', 'topic', 'subject', 'description', 'number')
     ordering = ['number']
 
 
 class PromptAdmin(admin.ModelAdmin):
-    list_display = ('lesson', 'prompt_number', 'number')
+    list_display = ('id', 'lesson', 'prompt_number', 'number')
     ordering = ['number']
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('prompt', 'task_text', 'audio_url', 'number')
-    ordering = ['number']
+    list_display = ('id', 'prompt', 'task_text', 'audio_url', 'number')
+    ordering = ['prompt', 'number']
 
 
 class UserTaskRecordingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'task', 'recording', 'time_created')
+    list_display = ('id', 'user', 'task', 'recording', 'time_created')
     ordering = ['time_created']
 
 
 class UserPromptScoreAdmin(admin.ModelAdmin):
-    list_display = ('user', 'lesson_topic', 'prompt_number', 'score')
+    list_display = ('id', 'user', 'lesson_topic', 'prompt_number', 'score')
     ordering = ['prompt_number']
 
 

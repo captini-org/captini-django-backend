@@ -68,5 +68,11 @@ class UserDetails(generics.RetrieveAPIView):
     queryset = models.User.objects.all()
     serializer_class = UserSerializer
     
+class UserUpdateProfileView(generics.UpdateAPIView):
+    permission_classes = [IsLoggedInUserOrReadOnly]
+    serializer_class = UserSerializer
+    queryset = models.User.objects.all()
+    print(queryset)
+    
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
