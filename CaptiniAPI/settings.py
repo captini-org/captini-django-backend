@@ -37,8 +37,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["0.0.0.0"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    "https://e-captini.herokuapp.com",
+    "https://captini.tullius.dev",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -54,8 +53,7 @@ CORS_ALLOW_HEADERS = (
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://captini-backend.herokuapp.com",
-    "https://e-captini.herokuapp.com",
+    "https://captini.tullius.dev",
 ]
 
 

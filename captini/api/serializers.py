@@ -1,6 +1,7 @@
 from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
+import random
 
 factory = APIRequestFactory()
 request = factory.get('/')
@@ -12,16 +13,21 @@ class UserPromptScoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TaskRecordingSerializer(serializers.ModelSerializer):
-    
+    random_score = serializers.SerializerMethodField()
+
     class Meta:
         model = UserTaskRecording
         fields = '__all__'
+        
+    def get_random_score(self, obj):
+        return random.randrange(0, 100, 5)
 
 class TaskSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Task
-        fields = "__all__"
+        fields = '__all__'
+        
 
 class PromptSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)
