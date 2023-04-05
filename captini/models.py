@@ -74,7 +74,7 @@ class UserTaskRecording(models.Model):
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
 
     if 'ON_HEROKU' in os.environ:
-        email_plaintext_message = "{}?token={}".format('https://hidden-hamlet-75709.herokuapp.com/api/password_reset/confirm' , reset_password_token.key)
+        email_plaintext_message = "{}?token={}".format('https://captini.tullius.dev/api/password_reset/confirm' , reset_password_token.key)
     else:
         email_plaintext_message = "{}?token={}".format('http://127.0.0.1:8000/api/password_reset/confirm' , reset_password_token.key)
 
