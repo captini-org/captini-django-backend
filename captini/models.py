@@ -15,7 +15,7 @@ class TopicNameField(models.CharField):
         return str(value).lower()
 
 class Topic(models.Model):
-    topic_name = TopicNameField(max_length=100)
+    topic_name = models.CharField(max_length=100)
     topic_description = models.TextField(max_length=254)
     number = models.IntegerField(default=0)
     
