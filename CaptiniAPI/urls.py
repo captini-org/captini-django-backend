@@ -23,5 +23,4 @@ urlpatterns = [
     path("captini/", include('captini.api.urls')),
     path("admin/", admin.site.urls),
     path("account/", include('account.api.urls')),
-    path("_nested_admin/", include('nested_admin.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,5 @@
 from django.contrib import admin
 from .models import Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording
-import nested_admin
-
 
 
 class TopicAdmin(admin.ModelAdmin):
@@ -12,7 +10,7 @@ class LessonsAdmin(admin.ModelAdmin):
     list_display = ('id', 'topic', 'subject', 'description', 'number')
     ordering = ['id', 'number']
 
-class TaskInline(nested_admin.NestedStackedInline):
+class TaskInline(admin.StackedInline):
     model = Task
     list_display = ('id', 'prompt', 'task_text', 'audio_url', 'number')
     ordering = ['id', 'prompt', 'number']
@@ -23,7 +21,7 @@ class TaskInline(nested_admin.NestedStackedInline):
             kwargs['queryset'] = Prompt.objects.order_by('prompt_number')
         return super(TaskInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
-class PromptAdmin(nested_admin.NestedModelAdmin):
+class PromptAdmin(admin.ModelAdmin):
     list_display = ('id', 'lesson', 'prompt_number', 'number')
     ordering = ['id', 'number']
     inlines = [TaskInline]
