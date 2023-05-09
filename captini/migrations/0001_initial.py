@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
             name='Topic',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('topic_name', captini.models.TopicNameField(default='', max_length=100)),
+                ('topic_name', models.CharField(default='', max_length=100)),
                 ('topic_description', models.TextField(default='', max_length=254)),
                 ('level', models.IntegerField(default=0)),
             ],

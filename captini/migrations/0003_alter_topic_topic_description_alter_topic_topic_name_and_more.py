@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='topic',
             name='topic_name',
-            field=captini.models.TopicNameField(max_length=100),
+            field=models.CharField(max_length=100),
         ),
         migrations.CreateModel(
             name='UserTaskRecording',
