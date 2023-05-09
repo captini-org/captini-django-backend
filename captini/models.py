@@ -7,13 +7,6 @@ import os
 
 from account.models import User
 
-class TopicNameField(models.CharField):
-    def __init__(self, *args, **kwargs):
-        super(TopicNameField, self).__init__(*args, **kwargs)
-
-    def get_prep_value(self, value):
-        return str(value).lower()
-
 class Topic(models.Model):
     topic_name = models.CharField(max_length=100)
     topic_description = models.TextField(max_length=254)
