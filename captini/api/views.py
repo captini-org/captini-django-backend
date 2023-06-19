@@ -8,13 +8,15 @@ from captini.models import (
     Prompt,
     Task,
     UserTaskRecording,
+    ExampleTaskRecording
 )
 from captini.api.serializers import (
     TopicSerializer,
     LessonSerializer,
     PromptSerializer,
     TaskSerializer,
-    TaskRecordingSerializer
+    TaskRecordingSerializer,
+    ExampleRecordingSerializer
 )
 
 
@@ -96,3 +98,12 @@ class TaskRecordingUpload(generics.CreateAPIView):
         user = self.request.user
         pk = self.kwargs["pk"]
         return UserTaskRecording.objects.filter(user=user, pk=pk)
+    
+class ExampleRecordingUpload(generics.ListCreateAPIView):
+    serializer_class = ExampleRecordingSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        return ExampleTaskRecording.objects.filter(pk=pk)

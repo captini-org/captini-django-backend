@@ -1,4 +1,4 @@
-from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording
+from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
 import random
@@ -21,8 +21,15 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         
     def get_random_score(self, obj):
         return random.randrange(0, 100, 5)
-
+    
+class ExampleRecordingSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ExampleTaskRecording
+        fields = '__all__'
+        
 class TaskSerializer(serializers.ModelSerializer):
+    examples = ExampleRecordingSerializer(many=True, read_only=True, source='task_example')
     
     class Meta:
         model = Task
