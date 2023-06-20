@@ -53,7 +53,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'birthday', 'nationality','score', 'global_rank', 'country_rank']
+        fields = ['username', 'first_name', 'last_name', 'email', 'birthday', 'nationality','score', 'global_rank', 'country_rank','native_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
         read_only_fields = ['score', 'global_rank', 'country_rank']
         
         
