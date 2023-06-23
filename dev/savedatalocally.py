@@ -21,7 +21,7 @@ cursor.execute("DELETE FROM captini_lesson;")
 conn.commit()
 cursor.execute("DELETE FROM captini_topic;")
 conn.commit()
-with open('captini.sql', 'r') as file:
+with open('captini.sql', encoding='utf-8') as file:
     for line in file:
         cursor.execute(line)                    
         conn.commit()
