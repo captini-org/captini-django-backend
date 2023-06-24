@@ -1,4 +1,4 @@
-from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording
+from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording , UserTaskScore
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
 import random
@@ -21,6 +21,29 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         
     def get_random_score(self, obj):
         return random.randrange(0, 100, 5)
+
+    #Override of the cration to save the score inside the DB and modify the user total score 
+    def create(self,validated_data):
+        print(self)
+        print(validated_data)
+        score=self.get_random_score(self)
+        scoring= {
+            'score': score,
+            'task_id': validated_data['task'].id,
+            'user_id':validated_data['user'].id
+        }
+        print(scoring)
+        print(*validated_data)
+        #print(validated_data)
+        task_recording=UserTaskRecording.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
+        if(task_recording):
+            print("Esiste")
+            task_recording.recording=validated_data['recording']
+        else:
+            task_recording=  UserTaskRecording.objects.create(**validated_data)
+        score= UserTaskScore.objects.create(**scoring)
+        return task_recording
+
     
 class ExampleRecordingSerializer(serializers.ModelSerializer):
     
