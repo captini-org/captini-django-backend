@@ -1,4 +1,4 @@
-from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording , UserTaskScore
+from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording , UserTaskScoreStats
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
 import random
@@ -20,31 +20,44 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
     def get_random_score(self, obj):
-        return random.randrange(0, 100, 5)
+        return 0#random.randrange(0, 100, 5) 
 
-    #Override of the cration to save the score inside the DB and modify the user total score 
+    #Override of the creation to save the score inside the DB and modify the user total score 
     def create(self,validated_data):
-        print(self)
-        print(validated_data)
-        score=self.get_random_score(self)
+        score=random.randrange(0, 100, 5)
+        old_score=0
         scoring= {
-            'score': score,
+            'score_mean': score,
             'task_id': validated_data['task'].id,
-            'user_id':validated_data['user'].id
+            'user_id':validated_data['user'].id,
+            'number_tentative' : "1"
         }
-        print(scoring)
-        print(*validated_data)
-        #print(validated_data)
         task_recording=UserTaskRecording.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
         if(task_recording):
-            print("Esiste")
             task_recording.recording=validated_data['recording']
+            old_score= task_recording.score
+            task_recording.score=score
+            stats=UserTaskScoreStats.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
+            stats.score_mean=((stats.score_mean*stats.number_tentative)+score)/(stats.number_tentative+1)
+            stats.number_tentative=stats.number_tentative+1
+            task_recording.score=score
         else:
-            task_recording=  UserTaskRecording.objects.create(**validated_data)
-        score= UserTaskScore.objects.create(**scoring)
+            task_recording=  UserTaskRecording.objects.create(score=score,**validated_data)
+            stats= UserTaskScoreStats.objects.create(**scoring)
+
+        print(validated_data['user'].score+score-old_score)
+        validated_data['user'].score=validated_data['user'].score+score-old_score
+        validated_data['user'].save()
+        stats.save()
+        task_recording.save()
         return task_recording
 
     
+class UserTaskScoreStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTaskScoreStats
+        fields = '__all__'
+
 class ExampleRecordingSerializer(serializers.ModelSerializer):
     
     class Meta:
