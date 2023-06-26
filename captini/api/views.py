@@ -1,6 +1,8 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from captini.api.permissions import *
+
+from account.models import User
 
 from captini.models import (
     Topic,
@@ -16,7 +18,8 @@ from captini.api.serializers import (
     PromptSerializer,
     TaskSerializer,
     TaskRecordingSerializer,
-    ExampleRecordingSerializer
+    ExampleRecordingSerializer,
+    UserLeaderboardSerializer
 )
 
 
@@ -107,3 +110,9 @@ class ExampleRecordingUpload(generics.ListCreateAPIView):
     def get_queryset(self):
         pk = self.kwargs["pk"]
         return ExampleTaskRecording.objects.filter(pk=pk)
+
+class UserListLeaderboard(generics.ListAPIView):
+    queryset = User.objects.filter(is_superuser=False).order_by('global_rank')
+    serializer_class = UserLeaderboardSerializer
+    #permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny] #Is this a bad call?
