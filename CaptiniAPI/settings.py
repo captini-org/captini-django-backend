@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "django_rest_passwordreset",
     "corsheaders",
     'django_filters',
+    #'compositefk',
 ]
 
 REST_FRAMEWORK = {

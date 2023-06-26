@@ -1,9 +1,12 @@
+from CaptiniAPI import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
 import os
+from compositefk.fields import CompositeForeignKey
+
 
 from account.models import User
 
@@ -51,8 +54,27 @@ class UserPromptScore(models.Model):
     def __str__(self):
         return self.prompt_number
 
+class UserTaskScoreStats(models.Model):
+    user = models.ForeignKey(User, related_name='user_task_score', on_delete=models.CASCADE)
+    task =models.ForeignKey(Task, related_name='task_id_score', on_delete=models.CASCADE)
+    score_mean = models.IntegerField(default=0)
+    number_tentative = models.IntegerField(default=1)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'task'],
+                name='unique_user_task'
+            )
+        ]
+
+## Save only the last recording for each user 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    print("name   ",filename)
+    path=settings.MEDIA_ROOT+'/user/recordings/user_{0}/{1}'.format(instance.user.id, filename)
+    if os.path.isfile(path):
+        os.remove(path)
+        print("Removed Element")
     return 'user/recordings/user_{0}/{1}'.format(instance.user.id, filename)
 
 def example_recording_directory_path(instance, filename):
@@ -64,6 +86,14 @@ class UserTaskRecording(models.Model):
     task = models.ForeignKey(Task, related_name='task_recording', on_delete=models.CASCADE)
     recording = models.FileField(upload_to=user_directory_path)
     time_created = models.DateTimeField(auto_now_add=True)
+    score =  models.IntegerField(default=0)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'task'],
+                name='unique_user_task_stats'
+            )
+        ]
     
 GENDER = [
     ("M", "Male"),
