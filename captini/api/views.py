@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from captini.api.permissions import *
 
@@ -14,6 +14,7 @@ from rest_framework.parsers import FileUploadParser
 
 
 
+from account.models import User
 from captini.models import (
     Topic,
     Lesson,
