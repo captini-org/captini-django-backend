@@ -9,7 +9,8 @@ from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSer
 from account import models
 from account.api.serializers import UserSerializer
 from captini.api.permissions import *
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+
 
 @api_view(
     [
@@ -64,12 +65,12 @@ class UserList(generics.ListAPIView):
 
 
 class UserDetails(generics.RetrieveAPIView):
-    permission_classes = [IsLoggedInUserOrReadOnly]
+    permission_classes = [IsAuthenticated]
     queryset = models.User.objects.all()
     serializer_class = UserSerializer
     
 class UserUpdateProfileView(generics.UpdateAPIView):
-    permission_classes = [IsLoggedInUserOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     queryset = models.User.objects.all()
     
