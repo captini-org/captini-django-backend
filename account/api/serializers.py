@@ -55,6 +55,27 @@ class UserSerializer(DynamicFieldsModelSerializer):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'birthday', 'nationality','score', 'global_rank', 'country_rank','native_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
         read_only_fields = ['score', 'global_rank', 'country_rank']
+
+class UserLeaderboardSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+                'id',
+                'is_active',
+                'date_joined',
+                'country_rank',
+                'global_rank',
+                'score',
+                'last_login',
+                'gender',
+                'language_level',
+                'username',
+                'native_language',
+                'nationality',
+                'profile_photo'
+            ]
+        read_only_fields = fields
         
         
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

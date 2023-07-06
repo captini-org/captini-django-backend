@@ -4,10 +4,11 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
 from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSerializer
 from account import models
-from account.api.serializers import UserSerializer
+from account.api.serializers import UserSerializer, UserLeaderboardSerializer
 from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
@@ -59,9 +60,19 @@ def registration_view(request):
 
 
 class UserList(generics.ListAPIView):
-    permission_classes = [IsAdminUser]
-    queryset = models.User.objects.all()
-    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated] #This was formerly IsAdminUser
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return UserSerializer
+        else:
+            return UserLeaderboardSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return models.User.objects.all()
+        else:
+            return models.User.objects.filter(is_superuser=False).order_by('global_rank')
 
 
 class UserDetails(generics.RetrieveAPIView):
