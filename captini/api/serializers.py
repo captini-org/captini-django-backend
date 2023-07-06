@@ -96,26 +96,6 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = "__all__"
 
-class UserLeaderboardSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = [
-                'id',
-                'is_active',
-                'date_joined',
-                'country_rank',
-                'global_rank',
-                'score',
-                'last_login',
-                'gender',
-                'language_level',
-                'username',
-                'native_language',
-                'nationality',
-                'profile_photo'
-            ]
-
 
     #def create(self, validated_data):
     #    topic_data = validated_data.pop('lessons')

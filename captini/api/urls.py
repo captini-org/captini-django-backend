@@ -18,7 +18,6 @@ urlpatterns = [
     path("tasks/<int:pk>/", views.TaskDetails().as_view(), name="task-details"),
     path("tasks/<int:pk>/upload/", views.TaskRecordingUpload().as_view(), name="recording-upload"),
     path("tasks/<int:pk>/upload-example/", views.ExampleRecordingUpload().as_view(), name="example-upload"),
-    path('account/users/', views.UserListLeaderboard.as_view(), name='user-list'),
 ]
 
 urpatterns = format_suffix_patterns(urlpatterns)

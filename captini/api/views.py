@@ -12,9 +12,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from rest_framework.parsers import FileUploadParser
 
-
-
-from account.models import User
 from captini.models import (
     Topic,
     Lesson,
@@ -30,7 +27,6 @@ from captini.api.serializers import (
     TaskSerializer,
     TaskRecordingSerializer,
     ExampleRecordingSerializer,
-    UserLeaderboardSerializer
 )
 
 
@@ -120,9 +116,3 @@ class ExampleRecordingUpload(generics.ListCreateAPIView):
     def get_queryset(self):
         pk = self.kwargs["pk"]
         return ExampleTaskRecording.objects.filter(pk=pk)
-
-class UserListLeaderboard(generics.ListAPIView):
-    queryset = User.objects.filter(is_superuser=False).order_by('global_rank')
-    serializer_class = UserLeaderboardSerializer
-    #permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny] #Is this a bad call?
