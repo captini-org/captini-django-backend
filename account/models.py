@@ -1,6 +1,6 @@
 from datetime import date
 import os
-from django.conf import settings
+from CaptiniAPI import settings
 from django.db import models
 # from django.conf import settings
 # from django.db.models.signals import post_save
