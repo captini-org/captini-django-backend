@@ -210,3 +210,11 @@ SIMPLE_JWT = {
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
 RABBITMQ_EXCHANGE = os.environ.get("RABBITMQ_EXCHANGE", "captini")
+
+# user photo registration
+STATIC_URL = "static/"
+
+MEDIA_URL = "recordings/"
+
+MEDIA_ROOT = "recordings"
+PHOTOS_URL = "profile_photos"

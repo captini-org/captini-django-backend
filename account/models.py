@@ -1,4 +1,6 @@
 from datetime import date
+import os
+from django.conf import settings
 from django.db import models
 # from django.conf import settings
 # from django.db.models.signals import post_save
@@ -18,10 +20,13 @@ LANGUAGE_LEVEL = [
 ]
 
 
-def user_directoryphotos(instance, filename): #TODO check if it is correct
+def user_directoryphotos(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'profile_photos/user{}/{1}'.format(instance.user.id, filename)
-
+    path=settings.PHOTOS_URL+'/user/profile_photos/user_{0}/{1}'.format(instance.id, filename)
+    if os.path.isfile(path):
+        os.remove(path)
+        print("Removed Element")
+    return 'user/profile_photos/user_{0}/{1}'.format(instance.id, filename) 
 
 class User(AbstractUser):
     """
@@ -42,6 +47,7 @@ class User(AbstractUser):
     global_rank = models.IntegerField(default=0)
     country_rank = models.IntegerField(default=0)
     native_language = models.CharField(default="english",max_length=50)
+    display_language = models.CharField(default="eng",max_length=3)
     gender = models.CharField(max_length=6, choices=GENDER, default="M")
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)
