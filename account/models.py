@@ -47,7 +47,7 @@ class User(AbstractUser):
     global_rank = models.IntegerField(default=0)
     country_rank = models.IntegerField(default=0)
     native_language = models.CharField(default="english",max_length=50)
-    display_language = models.CharField(default="eng",max_length=3)
+    display_language = models.CharField(default="en",max_length=3)
     gender = models.CharField(max_length=6, choices=GENDER, default="M")
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)

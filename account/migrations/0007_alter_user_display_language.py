@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='display_language',
-            field=models.CharField(default='eng', max_length=3),
+            field=models.CharField(default='en', max_length=3),
         ),
     ]
