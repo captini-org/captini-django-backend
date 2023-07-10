@@ -103,7 +103,7 @@ GENDER = [
 class ExampleTaskRecording(models.Model):
     task = models.ForeignKey(Task, related_name='task_example', on_delete=models.CASCADE)
     gender = models.CharField(max_length=6, choices=GENDER, default="M")
-    recording = models.FileField(upload_to=example_recording_directory_path)
+    recording = models.FileField(max_length=150, upload_to=example_recording_directory_path)
     time_created = models.DateTimeField(auto_now_add=True)
     
 

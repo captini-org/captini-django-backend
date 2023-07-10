@@ -51,7 +51,7 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         validated_data['user'].save()
         stats.save()
         task_recording.save()
-        return task_recording
+        return score
 
     
 class UserTaskScoreStatsSerializer(serializers.ModelSerializer):
