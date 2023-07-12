@@ -29,7 +29,7 @@ class PromptAdmin(admin.ModelAdmin):
 
 
 class UserTaskRecordingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'task', 'recording', 'time_created')
+    list_display = ('id', 'user', 'task', 'time_created')
     ordering = ['user', 'task', 'time_created']
     
 class ExampleTaskRecordingAdmin(admin.ModelAdmin):

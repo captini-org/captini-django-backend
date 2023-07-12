@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
+
 import os
 #from compositefk.fields import CompositeForeignKey
 
@@ -41,7 +42,6 @@ class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
     task_text = models.CharField(max_length=255)
     number = models.IntegerField(default=0)
-
     def __str__(self):
         return self.task_text
 
@@ -54,6 +54,7 @@ class UserPromptScore(models.Model):
     def __str__(self):
         return self.prompt_number
 
+#Audit table that will be used to the statistics for the user
 class UserTaskScoreStats(models.Model):
     user = models.ForeignKey(User, related_name='user_task_score', on_delete=models.CASCADE)
     task =models.ForeignKey(Task, related_name='task_id_score', on_delete=models.CASCADE)
@@ -67,15 +68,12 @@ class UserTaskScoreStats(models.Model):
             )
         ]
 
-## Save only the last recording for each user 
-def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    print("name   ",filename)
-    path=settings.MEDIA_ROOT+'/user/recordings/user_{0}/{1}'.format(instance.user.id, filename)
-    if os.path.isfile(path):
-        os.remove(path)
-        print("Removed Element")
-    return 'user/recordings/user_{0}/{1}'.format(instance.user.id, filename)
+### Function that is used to save all the recording keeping track only for the task id and gender
+def directory_path(instance, filename):
+    print(instance.task)
+    print(instance.gender)
+    path=settings.MEDIA_ROOT+'/users/recordings/{0}-{1}-{2}-{3}'.format(instance.task,instance.gender,filename)
+    return path
 
 def example_recording_directory_path(instance, filename):
     return 'examples/task_{0}_{1}'.format(instance.task, instance.gender)
@@ -84,7 +82,7 @@ def example_recording_directory_path(instance, filename):
 class UserTaskRecording(models.Model):
     user = models.ForeignKey(User, related_name='task_recording', on_delete=models.CASCADE)
     task = models.ForeignKey(Task, related_name='task_recording', on_delete=models.CASCADE)
-    recording = models.FileField(upload_to=user_directory_path)
+    lesson = models.ForeignKey(Lesson, related_name='task_recording', on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
     score =  models.IntegerField(default=0)
     class Meta:
@@ -94,6 +92,13 @@ class UserTaskRecording(models.Model):
                 name='unique_user_task_stats'
             )
         ]
+    #def save(self, *args, **kwargs):
+        # Save the model instance without the 'recording' field
+    #    print(*args)
+    #    super().save(*args, **kwargs)
+        # Save the 'recording' file locally if it's a new instance or the file has changed
+        
+
     
 GENDER = [
     ("M", "Male"),

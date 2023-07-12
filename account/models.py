@@ -28,6 +28,7 @@ def user_directoryphotos(instance, filename):
         print("Removed Element")
     return 'user/profile_photos/user_{0}/{1}'.format(instance.id, filename) 
 
+
 class User(AbstractUser):
     """
     An abstract base class implementing a fully featured User model with
