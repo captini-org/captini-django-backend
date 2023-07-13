@@ -53,7 +53,7 @@ class User(AbstractUser):
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)
     notification_setting_email= models.BooleanField(default=False)
-    profile_photo = models.ImageField(upload_to=user_directoryphotos, null=True, blank=True)
+    profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/puffin.jpg", blank=True)
 
     def __str__(self):
         return '{} {}'.format(self.id, self.username)
