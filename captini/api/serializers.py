@@ -61,7 +61,7 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
             'score_mean': score,
             'task_id': validated_data['task'].id,
             'user_id':validated_data['user'].id,
-            'number_tentative' : "1"
+            'number_tries' : "1"
         }
         
         task_recording=UserTaskRecording.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
@@ -69,11 +69,13 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
             old_score= task_recording.score
             task_recording.score=score
             stats=UserTaskScoreStats.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
-            stats.score_mean=((stats.score_mean*stats.number_tentative)+score)/(stats.number_tentative+1)
-            stats.number_tentative=stats.number_tentative+1
+            stats.score_mean=((stats.score_mean*stats.number_tries)+score)/(stats.number_tries+1)
+            stats.number_tries=stats.number_tries+1
             task_recording.score=score
 
         else:
+            if 'recording' in validated_data:
+                del validated_data['recording']
             task_recording=  UserTaskRecording.objects.create(score=score,**validated_data)
             stats= UserTaskScoreStats.objects.create(**scoring)
 
