@@ -59,7 +59,7 @@ class UserTaskScoreStats(models.Model):
     user = models.ForeignKey(User, related_name='user_task_score', on_delete=models.CASCADE)
     task =models.ForeignKey(Task, related_name='task_id_score', on_delete=models.CASCADE)
     score_mean = models.IntegerField(default=0)
-    number_tentative = models.IntegerField(default=1)
+    number_tries = models.IntegerField(default=1)
     class Meta:
         constraints = [
             models.UniqueConstraint(
