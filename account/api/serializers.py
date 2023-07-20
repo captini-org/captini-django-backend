@@ -8,7 +8,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2','first_name','last_name','birthday','nationality']
+        fields = ['username', 'email', 'password', 'password2','first_name','last_name','birthyear','nationality']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -26,7 +26,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         account = User(email=self.validated_data['email'], username=self.validated_data['username'],
         first_name=self.validated_data['first_name'],
         last_name=self.validated_data['last_name'],
-        birthday=self.validated_data['birthday'],
+        birthyear=self.validated_data['birthyear'],
         nationality=self.validated_data['nationality'])
         account.set_password(password)
         account.save()
@@ -56,7 +56,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'birthday', 'nationality','score', 'global_rank', 'country_rank','native_language', 'display_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
+        fields = ['username', 'first_name', 'last_name', 'email', 'birthyear', 'nationality','score', 'global_rank', 'country_rank','native_language', 'display_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
         read_only_fields = ['score', 'global_rank', 'country_rank']
 
 class UserLeaderboardSerializer(serializers.ModelSerializer):

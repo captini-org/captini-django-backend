@@ -41,7 +41,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=550)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    birthday = models.DateField(auto_now=False, default=date.today)
+    birthyear = models.IntegerField(default=0)
     nationality = models.CharField(max_length=254)
     date_joined = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
