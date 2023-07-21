@@ -21,7 +21,7 @@ LANGUAGE_LEVEL = [
 
 
 def user_directoryphotos(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    # file will be uploaded to MEDIA_ROOT/user_<id>/profilephoto<ext>
     uniform_name = 'profilephoto'+os.path.splitext(filename)[1]
     return 'user/profile_photos/user_{0}/{1}'.format(instance.id, uniform_name) 
 
@@ -53,18 +53,12 @@ class User(AbstractUser):
     profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/puffin.jpg", blank=True)
 
     def save(self, *args, **kwargs):
-        # Get the old instance from the database to check for changes
+        '''overrides tendency in django to add hexadecimal in file name to prevent overwriting of file with same name'''
         try:
-            old_instance = User.objects.get(pk=self.pk)
-        except User.DoesNotExist:
-            old_instance = None
-
-        # If an old instance exists and the profile_photo field is being updated
-        if old_instance and old_instance.profile_photo != self.profile_photo:
-            # Remove the old image file if it exists
-            if old_instance.profile_photo:
-                old_instance.profile_photo.delete(save=False)  # `save=False` to avoid recursion
-
+            this = User.objects.get(id=self.id)
+            if this.profile_photo != self.profile_photo:
+                this.profile_photo.delete()
+        except: pass
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
