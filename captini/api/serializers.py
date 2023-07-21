@@ -1,8 +1,11 @@
+import subprocess
 from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording , UserTaskScoreStats
 from account.models import User
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
 import random
+import os
+from django.core.files.storage import default_storage
 
 factory = APIRequestFactory()
 request = factory.get('/')
@@ -14,45 +17,78 @@ class UserPromptScoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TaskRecordingSerializer(serializers.ModelSerializer):
-    random_score = serializers.SerializerMethodField()
+    recording = serializers.FileField()  # Assuming 'recording' is a CharField in your request
 
     class Meta:
         model = UserTaskRecording
-        fields = '__all__'
+        fields = ['recording', 'user', 'task', 'lesson']
+
+    ### N.B. it will be fixed because actually it is running only in localhost when we will run the caitlin script in a real server it will work better
+    def calculateScore(self,output):
+        tot = 0
+        errors=[]
+        for line in output.splitlines()[1:]: # skip first line
+            if(line[0]!= '\t'):
+                words = line.split("\t")
+                tot=tot+1
+                if(float(words[1]) <-0.2):
+                    errors.append(words[0])
+
+        return 100*int((tot-len(errors))/tot),errors
+
+    def takeScoreRecording(self,validated_data):
+        recording = validated_data['recording']
+        script_path="/Users/davide/Desktop/connector/pronunciation-score-icelandic/demo.py"
+        os.chdir("/Users/davide/Desktop/connector/pronunciation-score-icelandic/")
+        command = ["python3", "-W", "ignore", script_path]
+        output = subprocess.check_output(command, universal_newlines=True)
+        return self.calculateScore(output)
         
-    def get_random_score(self, obj):
-        return 0#random.randrange(0, 100, 5) 
+    ### TODO async function with RabbitMQ to save the file with a queue
+    def saveRecordingLocally(self,validated_data):
+        ###PATH /pronunciation-score-icelandic/recordings/M4demo_j7bpKCm.wav
+        name=f"{validated_data['user'].gender}{validated_data['task'].id}{validated_data['recording'].name}"
+        filename = default_storage.get_available_name(name)
+        default_storage.save(filename, validated_data['recording'])
+        return filename
 
     #Override of the creation to save the score inside the DB and modify the user total score 
     def create(self,validated_data):
-        score=random.randrange(0, 100, 5)
+        score,errors=self.takeScoreRecording(validated_data)
+        self.saveRecordingLocally(validated_data)
         old_score=0
         scoring= {
             'score_mean': score,
             'task_id': validated_data['task'].id,
             'user_id':validated_data['user'].id,
-            'number_tentative' : "1"
+            'number_tries' : "1"
         }
+        
         task_recording=UserTaskRecording.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
         if(task_recording):
-            task_recording.recording=validated_data['recording']
             old_score= task_recording.score
             task_recording.score=score
             stats=UserTaskScoreStats.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
-            stats.score_mean=((stats.score_mean*stats.number_tentative)+score)/(stats.number_tentative+1)
-            stats.number_tentative=stats.number_tentative+1
+            stats.score_mean=((stats.score_mean*stats.number_tries)+score)/(stats.number_tries+1)
+            stats.number_tries=stats.number_tries+1
             task_recording.score=score
+
         else:
+            if 'recording' in validated_data:
+                del validated_data['recording']
             task_recording=  UserTaskRecording.objects.create(score=score,**validated_data)
             stats= UserTaskScoreStats.objects.create(**scoring)
 
-        print(validated_data['user'].score+score-old_score)
         validated_data['user'].score=validated_data['user'].score+score-old_score
         validated_data['user'].save()
         stats.save()
         task_recording.save()
-        return score
+        task_recording.errors = errors
+        return task_recording;
 
+    #Overwrite output
+    def to_representation(self, instance):
+        return {'task':instance.task.id,'score': instance.score, 'errors': instance.errors}
     
 class UserTaskScoreStatsSerializer(serializers.ModelSerializer):
     class Meta:

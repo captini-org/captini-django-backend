@@ -25,6 +25,7 @@ def user_directoryphotos(instance, filename):
     uniform_name = 'profilephoto'+os.path.splitext(filename)[1]
     return 'user/profile_photos/user_{0}/{1}'.format(instance.id, uniform_name) 
 
+
 class User(AbstractUser):
     """
     An abstract base class implementing a fully featured User model with
@@ -37,15 +38,15 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=550)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    birthday = models.DateField(auto_now=False, default=date.today)
+    birthyear = models.IntegerField(default=0)
     nationality = models.CharField(max_length=254)
     date_joined = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
     global_rank = models.IntegerField(default=0)
     country_rank = models.IntegerField(default=0)
-    native_language = models.CharField(default="english",max_length=50)
+    native_language = models.CharField(default="English",max_length=50)
     display_language = models.CharField(default="en",max_length=3)
-    gender = models.CharField(max_length=6, choices=GENDER, default="M")
+    gender = models.CharField(max_length=6, choices=GENDER, default="N")
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)
     notification_setting_email= models.BooleanField(default=False)
