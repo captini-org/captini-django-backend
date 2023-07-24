@@ -29,6 +29,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         last_name=self.validated_data['last_name'],
         birthyear=self.validated_data['birthyear'],
         nationality=self.validated_data['nationality'])
+        account.initialize_ranks()
         account.set_password(password)
         account.save()
         return account
