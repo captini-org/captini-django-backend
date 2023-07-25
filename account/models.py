@@ -50,7 +50,7 @@ class User(AbstractUser):
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)
     notification_setting_email= models.BooleanField(default=False)
-    profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/puffin.jpg", blank=True)
+    profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/user/profile_photos/puffin.jpg", blank=True)
 
     def save(self, *args, **kwargs):
         '''overrides tendency in django to add hexadecimal in file name to prevent overwriting of file with same name'''
