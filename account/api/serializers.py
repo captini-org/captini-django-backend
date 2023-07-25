@@ -1,6 +1,7 @@
 from account.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.utils import timezone
 
 class RegistrationSerializer(serializers.ModelSerializer):
     
@@ -28,6 +29,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         last_name=self.validated_data['last_name'],
         birthyear=self.validated_data['birthyear'],
         nationality=self.validated_data['nationality'])
+        account.initialize_ranks()
         account.set_password(password)
         account.save()
         return account
@@ -84,10 +86,16 @@ class UserLeaderboardSerializer(serializers.ModelSerializer):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
     def validate(self, attrs):
-        # The default result (access/refresh tokens)
-        data = super(MyTokenObtainPairSerializer, self).validate(attrs)
-        # Custom data you want to include
-        data.update({'user': self.user.username})
-        data.update({'id': self.user.id})
-        # and everything else you want to send in the response
+        data = super().validate(attrs)
+
+        # Updating the `last_login` field.
+        self.user.last_login = timezone.now()
+        self.user.save(update_fields=['last_login'])
+
+        # Your custom data
+        data.update({
+            'user': self.user.username,
+            'id': self.user.id,
+        })
+
         return data

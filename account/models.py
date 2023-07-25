@@ -61,6 +61,18 @@ class User(AbstractUser):
         except: pass
         super(User, self).save(*args, **kwargs)
 
+
+    def initialize_ranks(self):
+        # Get the highest global rank from existing users or default to 0 if no users exist
+        lowest_global_rank = User.objects.aggregate(models.Max('global_rank'))['global_rank__max'] or 0
+
+        # Get the highest country rank from existing users or default to 0 if no users exist
+        lowest_country_rank = User.objects.aggregate(models.Max('country_rank'))['country_rank__max'] or 0
+
+        # Set the new user's global_rank and country_rank to one more than the lowest ranks
+        self.global_rank = lowest_global_rank + 1
+        self.country_rank = lowest_country_rank + 1
+
     def __str__(self):
         return '{} {}'.format(self.id, self.username)
 
