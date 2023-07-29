@@ -11,7 +11,8 @@ conn = psycopg2.connect(
     port="5432"
 )
 cursor = conn.cursor()
-
+cursor.execute("DELETE FROM captini_exampletaskrecording;")
+conn.commit()
 with open('audio.sql', encoding='utf-8') as file:
     for line in file:
         cursor.execute(line)
