@@ -72,9 +72,7 @@ class UserList(generics.ListAPIView):
         if self.request.user.is_staff:
             return models.User.objects.all()
         else:
-            print(models.User.objects.filter(is_superuser=False).order_by('-score'))
-            print(models.User.objects.filter(is_superuser=False).order_by('-score','date_joined'))
-            return models.User.objects.filter(is_superuser=False).order_by('-score','date_joined')
+            return models.User.objects.filter(is_superuser=False).order_by('global_rank','date_joined')
 
 
 class UserDetails(generics.RetrieveAPIView):

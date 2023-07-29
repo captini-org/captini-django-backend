@@ -41,19 +41,31 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=550)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-    birthday = models.DateField(auto_now=False, default=date.today)
+    birthyear = models.IntegerField(default=0)
     nationality = models.CharField(max_length=254)
     date_joined = models.DateTimeField(auto_now_add=True)
     score = models.IntegerField(default=0)
     global_rank = models.IntegerField(default=0)
     country_rank = models.IntegerField(default=0)
-    native_language = models.CharField(default="english",max_length=50)
+    native_language = models.CharField(default="English",max_length=50)
     display_language = models.CharField(default="en",max_length=3)
-    gender = models.CharField(max_length=6, choices=GENDER, default="M")
+    gender = models.CharField(max_length=6, choices=GENDER, default="N")
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)
     notification_setting_email= models.BooleanField(default=False)
     profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/puffin.jpg", blank=True)
+
+
+    def initialize_ranks(self):
+        # Get the highest global rank from existing users or default to 0 if no users exist
+        lowest_global_rank = User.objects.aggregate(models.Max('global_rank'))['global_rank__max'] or 0
+
+        # Get the highest country rank from existing users or default to 0 if no users exist
+        lowest_country_rank = User.objects.aggregate(models.Max('country_rank'))['country_rank__max'] or 0
+
+        # Set the new user's global_rank and country_rank to one more than the lowest ranks
+        self.global_rank = lowest_global_rank + 1
+        self.country_rank = lowest_country_rank + 1
 
     def __str__(self):
         return '{} {}'.format(self.id, self.username)

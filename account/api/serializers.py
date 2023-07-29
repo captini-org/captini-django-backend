@@ -1,6 +1,7 @@
 from account.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.utils import timezone
 
 class RegistrationSerializer(serializers.ModelSerializer):
     
@@ -8,7 +9,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2','first_name','last_name','birthday','nationality']
+        fields = ['username', 'email', 'password', 'password2','first_name','last_name','birthyear','nationality']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -26,8 +27,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         account = User(email=self.validated_data['email'], username=self.validated_data['username'],
         first_name=self.validated_data['first_name'],
         last_name=self.validated_data['last_name'],
-        birthday=self.validated_data['birthday'],
+        birthyear=self.validated_data['birthyear'],
         nationality=self.validated_data['nationality'])
+        account.initialize_ranks()
         account.set_password(password)
         account.save()
         return account
@@ -56,7 +58,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'birthday', 'nationality','score', 'global_rank', 'country_rank','native_language', 'display_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
+        fields = ['username', 'first_name', 'last_name', 'email', 'birthyear', 'nationality','score', 'global_rank', 'country_rank','native_language', 'display_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
         read_only_fields = ['score', 'global_rank', 'country_rank']
 
 class UserLeaderboardSerializer(serializers.ModelSerializer):
@@ -84,10 +86,16 @@ class UserLeaderboardSerializer(serializers.ModelSerializer):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
     def validate(self, attrs):
-        # The default result (access/refresh tokens)
-        data = super(MyTokenObtainPairSerializer, self).validate(attrs)
-        # Custom data you want to include
-        data.update({'user': self.user.username})
-        data.update({'id': self.user.id})
-        # and everything else you want to send in the response
+        data = super().validate(attrs)
+
+        # Updating the `last_login` field.
+        self.user.last_login = timezone.now()
+        self.user.save(update_fields=['last_login'])
+
+        # Your custom data
+        data.update({
+            'user': self.user.username,
+            'id': self.user.id,
+        })
+
         return data
