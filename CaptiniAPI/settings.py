@@ -15,7 +15,6 @@ from datetime import timedelta
 import os
 from sendgrid_backend import SendgridBackend
 from django.core.mail import send_mail
-import os
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -24,6 +23,7 @@ load_dotenv(find_dotenv())
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ['SECRET_KEY']
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -177,8 +177,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY", "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")
 DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
-# temporary api key from Baha
-SENDGRID_API_KEY = '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'
+# temporary api key from Baha in .env
+SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
