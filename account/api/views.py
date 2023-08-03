@@ -94,7 +94,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class CustomPasswordResetView(PasswordResetView):
     serializer_class = CustomPasswordResetSerializer
 
-    def send_email(self, request, **kwargs):
+    def send_email(self, request,  *args,**kwargs):
         # Here, we override the send_email method to use our custom serializer
         # for generating the email content, including the reset URL.
 
