@@ -105,5 +105,5 @@ class CustomPasswordResetSerializer(ResetTokenSerializer):
     def get_email_context(self):
         context = super().get_email_context()
         # temporary url
-        context["reset_url"] = "http://localhost:4200/api/password_reset/confirm/"
+        context["reset_url"] = "http://localhost:4200/reset/"
         return context
