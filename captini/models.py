@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
-
 import os
 #from compositefk.fields import CompositeForeignKey
 
@@ -123,11 +122,16 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     send_mail(
         # title:
-        "Password Reset for captini",
+        "Password reset for captini",
         # message:
         email_plaintext_message,
         # from:
         "no-reply@tiro.is",
         # to:
-        [reset_password_token.user.email]
+        #[reset_password_token.user.email]
+        # temporary test
+        ['tme1@hi.is'],
+        html_message='<p>This is a html message</p>',  # Pass the HTML content as 'html_message'
+        fail_silently=False
     )
+

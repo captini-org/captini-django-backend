@@ -12,6 +12,9 @@ from account.api.serializers import UserSerializer, UserLeaderboardSerializer
 from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
+from django.shortcuts import get_object_or_404
+from django_rest_passwordreset.views import RequestPasswordResetConfirmAPIView
+
 
 @api_view(
     [
@@ -87,3 +90,21 @@ class UserUpdateProfileView(generics.UpdateAPIView):
     
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+class PasswordResetView(RequestPasswordResetConfirmAPIView):
+    def post(self, request):
+        # Get the user's email from the request data
+        email = request.data.get("email")
+
+        if email:
+            # temporary url
+            url = "http://localhost:4200/api/password_reset/"
+            payload = {"email": email}
+            response = request.post(url, json=payload)
+
+            if response.status_code == 200:
+                return Response({"message": "Password reset email has been sent successfully."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Failed to trigger password reset."}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Please provide a valid email."}, status=status.HTTP_400_BAD_REQUEST)
