@@ -13,7 +13,7 @@ from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from django.shortcuts import get_object_or_404
-from django_rest_passwordreset.views import PasswordResetView
+from django_rest_passwordreset.views import ResetPasswordRequestToken
 from .serializers import CustomPasswordResetSerializer
 
 @api_view(
@@ -91,7 +91,7 @@ class UserUpdateProfileView(generics.UpdateAPIView):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-class CustomPasswordResetView(PasswordResetView):
+class CustomPasswordResetView(ResetPasswordRequestToken):
     serializer_class = CustomPasswordResetSerializer
 
     def send_email(self, request,  *args,**kwargs):
@@ -101,6 +101,6 @@ class CustomPasswordResetView(PasswordResetView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
+        
         # You can customize the response as needed.
         return Response({"message": "Password reset email has been sent successfully."}, status=status.HTTP_200_OK)

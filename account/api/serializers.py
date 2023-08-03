@@ -2,7 +2,7 @@ from account.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
-from django_rest_passwordreset.serializers import PasswordResetSerializer
+from django_rest_passwordreset.serializers import ResetTokenSerializer
 
 class RegistrationSerializer(serializers.ModelSerializer):
     
@@ -101,7 +101,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return data
     
-class CustomPasswordResetSerializer(PasswordResetSerializer):
+class CustomPasswordResetSerializer(ResetTokenSerializer):
     def get_email_context(self):
         context = super().get_email_context()
         # temporary url
