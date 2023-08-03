@@ -2,6 +2,7 @@ from account.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
+from django_rest_passwordreset.serializers import PasswordResetTokenSerializer
 
 class RegistrationSerializer(serializers.ModelSerializer):
     
@@ -99,3 +100,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         })
 
         return data
+    
+class CustomPasswordResetSerializer(PasswordResetTokenSerializer):
+    def get_email_context(self):
+        context = super().get_email_context()
+        # temporary url
+        context["reset_url"] = "http://localhost:4200/api/password_reset/confirm/"
+        return context

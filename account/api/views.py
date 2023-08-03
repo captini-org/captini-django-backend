@@ -13,8 +13,8 @@ from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from django.shortcuts import get_object_or_404
-from django_rest_passwordreset.views import RequestPasswordResetConfirmAPIView
-
+from django_rest_passwordreset.views import PasswordResetView
+from .serializers import CustomPasswordResetSerializer
 
 @api_view(
     [
@@ -91,20 +91,16 @@ class UserUpdateProfileView(generics.UpdateAPIView):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-class PasswordResetView(RequestPasswordResetConfirmAPIView):
-    def post(self, request):
-        # Get the user's email from the request data
-        email = request.data.get("email")
+class CustomPasswordResetView(PasswordResetView):
+    serializer_class = CustomPasswordResetSerializer
 
-        if email:
-            # temporary url
-            url = "http://localhost:4200/api/password_reset/"
-            payload = {"email": email}
-            response = request.post(url, json=payload)
+    def send_email(self, request, **kwargs):
+        # Here, we override the send_email method to use our custom serializer
+        # for generating the email content, including the reset URL.
 
-            if response.status_code == 200:
-                return Response({"message": "Password reset email has been sent successfully."}, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "Failed to trigger password reset."}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"error": "Please provide a valid email."}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # You can customize the response as needed.
+        return Response({"message": "Password reset email has been sent successfully."}, status=status.HTTP_200_OK)

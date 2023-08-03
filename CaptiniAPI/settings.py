@@ -175,9 +175,10 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIT_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY", "your-sendgrid-api-key")
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY", "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")
 DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
-SENDGRID_API_KEY = 'your-sendgrid-api-key'
+# temporary api key from Baha
+SENDGRID_API_KEY = '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'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

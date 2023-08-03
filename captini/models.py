@@ -129,9 +129,9 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         "no-reply@tiro.is",
         # to:
         #[reset_password_token.user.email]
+        
         # temporary test
         ['tme1@hi.is'],
-        html_message='<p>This is a html message</p>',  # Pass the HTML content as 'html_message'
         fail_silently=False
     )
 
