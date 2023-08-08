@@ -170,15 +170,17 @@ AUTH_USER_MODEL = "account.User"
 # Email
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini")
+
+# temporary api key from mita's sendgrid account in .env
+SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIT_PORT = 587
-EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY", "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")
-DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
-# temporary api key from Baha in .env
-SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+DEFAULT_FROM_EMAIL = 'tme1@hi.is'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+SENDGRID_ECHO_TO_STDOUT=True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
