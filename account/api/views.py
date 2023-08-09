@@ -1,3 +1,4 @@
+import os
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,6 +16,12 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import ResetPasswordRequestToken
 from .serializers import CustomPasswordResetSerializer
+from sendgrid.helpers.mail import Mail
+from sendgrid import SendGridAPIClient
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
 
 @api_view(
     [
@@ -61,6 +68,33 @@ def registration_view(request):
 
         return Response(data, status=status.HTTP_201_CREATED)
 
+@api_view(["POST"])
+def send_mail(request,*args):
+    if request.method == 'POST':
+        FROM_EMAIL = ['tme1@hi.is']
+        print(args)
+        TO_EMAIL = 'tme1@hi.is'
+        TEMPLATE_ID = 'd-6a4459d36f194d1e862acafb8ae1d4e3'
+
+        message = Mail(
+        from_email=FROM_EMAIL,
+        to_emails=TO_EMAIL
+        )
+        
+        message.template_id = TEMPLATE_ID
+        
+        try:
+            sg = SendGridAPIClient(os.environ['SENDGRID_API_KEY'])
+            response = sg.send(message)
+            code, body, headers = response.status_code, response.body, response.headers
+            print(f"Response code: {code}")
+            print(f"Response headers: {headers}")
+            print(f"Response body: {body}")
+            print("Dynamic Messages Sent!")
+            return Response({'message': 'Sendgrid mail sent successfully!'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Error {0}".format(e))
+            return Response({'error': 'Sendgrid mail failed to send'})
 
 class UserList(generics.ListAPIView):
     permission_classes = [IsAuthenticated] #This was formerly IsAdminUser
@@ -90,17 +124,3 @@ class UserUpdateProfileView(generics.UpdateAPIView):
     
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
-class CustomPasswordResetView(ResetPasswordRequestToken):
-    serializer_class = CustomPasswordResetSerializer
-
-    def send_email(self, request,  *args,**kwargs):
-        # Here, we override the send_email method to use our custom serializer
-        # for generating the email content, including the reset URL.
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        
-        # You can customize the response as needed.
-        return Response({"message": "Password reset email has been sent successfully."}, status=status.HTTP_200_OK)
