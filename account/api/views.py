@@ -15,7 +15,6 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import ResetPasswordRequestToken
-from .serializers import CustomPasswordResetSerializer
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 from dotenv import load_dotenv, find_dotenv
@@ -95,6 +94,20 @@ def send_mail(request,*args):
         except Exception as e:
             print("Error {0}".format(e))
             return Response({'error': 'Sendgrid mail failed to send'})
+        
+@api_view(["POST"])
+def change_password(request):
+    if request.method == 'POST':
+        serializer = RegistrationSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            account = serializer.save()
+        try:    
+            print(request.data)
+            return Response({'message': 'Request to change password received!'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("Error {0}".format(e))
+            return Response({'error': 'Request to change password failed'})
 
 class UserList(generics.ListAPIView):
     permission_classes = [IsAuthenticated] #This was formerly IsAdminUser

@@ -58,6 +58,14 @@ CORS_ALLOW_HEADERS = (
         'x-csrftoken'
 )
 
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+]
 
 CSRF_TRUSTED_ORIGINS = [
 
