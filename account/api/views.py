@@ -13,6 +13,7 @@ from account.api.serializers import UserSerializer, UserLeaderboardSerializer
 from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
+from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import ResetPasswordRequestToken
 from sendgrid.helpers.mail import Mail
@@ -97,17 +98,28 @@ def send_mail(request,*args):
         
 @api_view(["POST"])
 def change_password(request):
+    # get password from request data
+    pwData = request.data['passwordForm']
+
+    # get username from request data
+    userData = request.data['profilForm']
+    distinctUsername = userData['username']
+
+    # get account by filtering query set for Users and finding the one with unique username from requestData
+    account = models.User.objects.get_queryset().filter(username=distinctUsername).first()
+
     if request.method == 'POST':
-        serializer = RegistrationSerializer(data=request.data)
-        data = {}
-        if serializer.is_valid():
-            account = serializer.save()
-        try:    
-            print(request.data)
-            return Response({'message': 'Request to change password received!'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print("Error {0}".format(e))
-            return Response({'error': 'Request to change password failed'})
+        # if the hashed value of old password from request data matches hashed password stored in user account, replace
+        if check_password(pwData['_oldPass'],account.password):
+            try:
+                account.set_password(pwData['_newPass'])
+                account.save()    
+                return Response({'message': 'Change password successful!'}, status=status.HTTP_200_OK)
+            except Exception as e:
+                print("Error {0}".format(e))
+                return Response({'error': 'Request to change password failed'})
+        else:
+            return Response({'error': 'Old password does not match stored password'})
 
 class UserList(generics.ListAPIView):
     permission_classes = [IsAuthenticated] #This was formerly IsAdminUser
