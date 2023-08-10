@@ -122,6 +122,8 @@ class PasswordResetSerializer(serializers.Serializer):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         reset_link = RESET_PASSWORD_LINK +f"{uid}/{token}/"
+        TEMPLATE_ID = 'd-492b6c9a72a9447f827f8cfe04b8f4a4'
+        
         print(reset_link)
         print(uid)
         print(token)
@@ -129,13 +131,12 @@ class PasswordResetSerializer(serializers.Serializer):
             from_email= EMAIL_HOST_USER,  # Sender's email
             to_emails=self.validated_data['email'],  # Recipient's email
             subject='Password Reset',
-            html_content=f'We have received a request for a password reset on your CAPTinI account. You can reset your password  <a href="{reset_link}">here</a>. <br> If you did not contact us please ignore this email.'
         )
-        '''message.template_id = "d-6a4459d36f194d1e862acafb8ae1d4e3"  # Replace with your actual template ID
+        
+        message.template_id = TEMPLATE_ID
         message.dynamic_template_data = {
             "reset_link": reset_link
         }
-        '''
         try:
             print(SENDGRID_API_KEY)
             sg = SendGridAPIClient(SENDGRID_API_KEY)
