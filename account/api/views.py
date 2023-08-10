@@ -1,4 +1,3 @@
-import os
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,22 +5,18 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-
+from django.utils.encoding import force_str
 from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSerializer
 from account import models
 from account.api.serializers import UserSerializer, UserLeaderboardSerializer
 from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-
+from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import ResetPasswordRequestToken
-from .serializers import CustomPasswordResetSerializer
-from sendgrid.helpers.mail import Mail
-from sendgrid import SendGridAPIClient
-from dotenv import load_dotenv, find_dotenv
-
-load_dotenv(find_dotenv())
-
+from .serializers import PasswordResetSerializer,PasswordResetConfirmSerializer
+from account.models import User
+from django.contrib.auth.tokens import default_token_generator
 
 @api_view(
     [
@@ -68,33 +63,6 @@ def registration_view(request):
 
         return Response(data, status=status.HTTP_201_CREATED)
 
-@api_view(["POST"])
-def send_mail(request,*args):
-    if request.method == 'POST':
-        FROM_EMAIL = ['tme1@hi.is']
-        print(args)
-        TO_EMAIL = 'tme1@hi.is'
-        TEMPLATE_ID = 'd-6a4459d36f194d1e862acafb8ae1d4e3'
-
-        message = Mail(
-        from_email=FROM_EMAIL,
-        to_emails=TO_EMAIL
-        )
-        
-        message.template_id = TEMPLATE_ID
-        
-        try:
-            sg = SendGridAPIClient(os.environ['SENDGRID_API_KEY'])
-            response = sg.send(message)
-            code, body, headers = response.status_code, response.body, response.headers
-            print(f"Response code: {code}")
-            print(f"Response headers: {headers}")
-            print(f"Response body: {body}")
-            print("Dynamic Messages Sent!")
-            return Response({'message': 'Sendgrid mail sent successfully!'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print("Error {0}".format(e))
-            return Response({'error': 'Sendgrid mail failed to send'})
 
 class UserList(generics.ListAPIView):
     permission_classes = [IsAuthenticated] #This was formerly IsAdminUser
@@ -124,3 +92,23 @@ class UserUpdateProfileView(generics.UpdateAPIView):
     
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+class PasswordResetView(generics.CreateAPIView):
+    serializer_class = PasswordResetSerializer
+class PasswordResetConfirmView(generics.UpdateAPIView):
+    serializer_class = PasswordResetConfirmSerializer
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        uid = force_str(urlsafe_base64_decode(serializer.validated_data['uid']))
+        user = User.objects.get(pk=uid)
+
+        if not default_token_generator.check_token(user, serializer.validated_data['token']):
+            return Response({'detail': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+
+        return Response({'detail': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)

@@ -2,8 +2,14 @@ from account.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from django_rest_passwordreset.serializers import ResetTokenSerializer
-
+from django.contrib.auth.tokens import default_token_generator
+from sendgrid.helpers.mail import Mail
+from sendgrid import SendGridAPIClient
+import os
+from CaptiniAPI.settings import SENDGRID_API_KEY,EMAIL_HOST_USER, RESET_PASSWORD_LINK
 class RegistrationSerializer(serializers.ModelSerializer):
     
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -101,9 +107,46 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return data
     
-class CustomPasswordResetSerializer(ResetTokenSerializer):
-    def get_email_context(self):
-        context = super().get_email_context()
-        # temporary url
-        context["reset_url"] = "http://localhost:4200/reset/"
-        return context
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        try:
+            user = User.objects.get(email=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("No user found with this email.")
+        return value
+
+    def save(self):
+        user = User.objects.get(email=self.validated_data['email'])
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_link = RESET_PASSWORD_LINK +f"{uid}/{token}/"
+        print(reset_link)
+        print(uid)
+        print(token)
+        message = Mail(
+            from_email= EMAIL_HOST_USER,  # Sender's email
+            to_emails=self.validated_data['email'],  # Recipient's email
+            subject='Password Reset',
+            html_content=f'We have received a request for a password reset on your CAPTinI account. You can reset your password  <a href="{reset_link}">here</a>. <br> If you did not contact us please ignore this email.'
+        )
+        '''message.template_id = "d-6a4459d36f194d1e862acafb8ae1d4e3"  # Replace with your actual template ID
+        message.dynamic_template_data = {
+            "reset_link": reset_link
+        }
+        '''
+        try:
+            print(SENDGRID_API_KEY)
+            sg = SendGridAPIClient(SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as e:
+            print(str(e))
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField()

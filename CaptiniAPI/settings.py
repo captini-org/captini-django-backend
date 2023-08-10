@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-from sendgrid_backend import SendgridBackend
 from django.core.mail import send_mail
 from dotenv import load_dotenv, find_dotenv
 
@@ -170,18 +169,16 @@ AUTH_USER_MODEL = "account.User"
 # Email
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini")
-
-# temporary api key from mita's sendgrid account in .env
-SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-DEFAULT_FROM_EMAIL = 'tme1@hi.is'
-EMAIL_PORT = 587
+EMAIT_PORT = 587
 EMAIL_USE_TLS = True
-SENDGRID_ECHO_TO_STDOUT=True
-
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
+# temporary api key from Baha in .env
+SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
+RESET_PASSWORD_LINK = os.environ['RESET_PASSWORD_LINK']
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
