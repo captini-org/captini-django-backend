@@ -38,11 +38,29 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
 
     def takeScoreRecording(self,validated_data):
         recording = validated_data['recording']
-        script_path="/Users/davide/Desktop/connector/pronunciation-score-icelandic/demo.py"
-        os.chdir("/Users/davide/Desktop/connector/pronunciation-score-icelandic/")
-        command = ["python3", "-W", "ignore", script_path]
-        output = subprocess.check_output(command, universal_newlines=True)
-        return self.calculateScore(output)
+
+        # Use os.path.join to build the path (assumes you are running from captini-django-backend)
+        # script_path = os.path.join("..", "..", "modules", "pronunciation", "pronunciation-score-icelandic", "demo.py")
+
+        #print(script_path)
+
+        # Change the working directory to the directory of the script
+        # os.chdir(os.path.dirname(script_path))
+
+        # command = 'source ~/anaconda3/etc/profile.d/conda.sh; conda activate captinidemo; ~/anaconda3/envs/captinidemo/bin/python demo.py'
+
+        #output = subprocess.check_output(command, universal_newlines=True, shell=True)
+
+        # process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, executable="/bin/bash")
+        # output, err = process.communicate()
+        # print(output)
+
+        #script_path="/Users/davide/Desktop/connector/pronunciation-score-icelandic/demo.py"
+        #os.chdir("/Users/davide/Desktop/connector/pronunciation-score-icelandic/")
+        #command = ["python3", "-W", "ignore", script_path]
+        #output = subprocess.check_output(command, universal_newlines=True)
+        #return self.calculateScore(output)
+        return 100, []
         
     ### TODO async function with RabbitMQ to save the file with a queue
     def saveRecordingLocally(self,validated_data):
@@ -53,38 +71,49 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         return filename
 
     #Override of the creation to save the score inside the DB and modify the user total score 
-    def create(self,validated_data):
-        score,errors=self.takeScoreRecording(validated_data)
+    def create(self, validated_data):
+        score, errors = self.takeScoreRecording(validated_data)
         self.saveRecordingLocally(validated_data)
-        old_score=0
-        scoring= {
+        old_score = 0
+        scoring = {
             'score_mean': score,
             'task_id': validated_data['task'].id,
-            'user_id':validated_data['user'].id,
-            'number_tries' : "1"
+            'user_id': validated_data['user'].id,
+            'number_tries': "1"
         }
-        
-        task_recording=UserTaskRecording.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
-        if(task_recording):
-            old_score= task_recording.score
-            task_recording.score=score
-            stats=UserTaskScoreStats.objects.get_queryset().filter( user=validated_data['user'],task=validated_data['task']).first()
-            stats.score_mean=((stats.score_mean*stats.number_tries)+score)/(stats.number_tries+1)
-            stats.number_tries=stats.number_tries+1
-            task_recording.score=score
+
+        task_recording = UserTaskRecording.objects.filter(user=validated_data['user'], task=validated_data['task']).first()
+        if task_recording:
+            old_score = task_recording.score
+            task_recording.score = score
+
+            stats = UserTaskScoreStats.objects.filter(user=validated_data['user'], task=validated_data['task']).first()
+
+            if stats:
+                stats.score_mean = ((stats.score_mean * stats.number_tries) + score) / (stats.number_tries + 1)
+                stats.number_tries += 1
+                stats.save()
+            else:
+                # If the UserTaskScoreStats record doesn't exist, create a new one.
+                stats = UserTaskScoreStats.objects.create(
+                    user=validated_data['user'],
+                    task=validated_data['task'],
+                    score_mean=score,
+                    number_tries=1
+                )
+            task_recording.save()
 
         else:
             if 'recording' in validated_data:
                 del validated_data['recording']
-            task_recording=  UserTaskRecording.objects.create(score=score,**validated_data)
-            stats= UserTaskScoreStats.objects.create(**scoring)
+            task_recording = UserTaskRecording.objects.create(score=score, **validated_data)
+            stats = UserTaskScoreStats.objects.create(**scoring)
 
-        validated_data['user'].score=validated_data['user'].score+score-old_score
+        validated_data['user'].score = validated_data['user'].score + score - old_score
         validated_data['user'].save()
-        stats.save()
-        task_recording.save()
         task_recording.errors = errors
-        return task_recording;
+
+        return task_recording
 
     #Overwrite output
     def to_representation(self, instance):
