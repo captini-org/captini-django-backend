@@ -179,6 +179,7 @@ DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
 # temporary api key from Baha in .env
 SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
 RESET_PASSWORD_LINK = os.environ['RESET_PASSWORD_LINK']
+TEMPLATE_ID = os.environ['TEMPLATE_ID']
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 

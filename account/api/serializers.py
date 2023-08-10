@@ -9,7 +9,7 @@ from django.contrib.auth.tokens import default_token_generator
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 import os
-from CaptiniAPI.settings import SENDGRID_API_KEY,EMAIL_HOST_USER, RESET_PASSWORD_LINK
+from CaptiniAPI.settings import SENDGRID_API_KEY,EMAIL_HOST_USER, RESET_PASSWORD_LINK, TEMPLATE_ID
 class RegistrationSerializer(serializers.ModelSerializer):
     
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -122,7 +122,6 @@ class PasswordResetSerializer(serializers.Serializer):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         reset_link = RESET_PASSWORD_LINK +f"{uid}/{token}/"
-        TEMPLATE_ID = 'd-492b6c9a72a9447f827f8cfe04b8f4a4'
         
         print(reset_link)
         print(uid)
@@ -130,7 +129,7 @@ class PasswordResetSerializer(serializers.Serializer):
         message = Mail(
             from_email= EMAIL_HOST_USER,  # Sender's email
             to_emails=self.validated_data['email'],  # Recipient's email
-            subject='Password Reset',
+            subject='Password reset link for CAPTinI',
         )
         
         message.template_id = TEMPLATE_ID
