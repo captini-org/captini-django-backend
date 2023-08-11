@@ -44,7 +44,7 @@ class User(AbstractUser):
     score = models.IntegerField(default=0)
     global_rank = models.IntegerField(default=0)
     country_rank = models.IntegerField(default=0)
-    native_language = models.CharField(default="English",max_length=50)
+    native_language = models.CharField(default="en",max_length=50)
     display_language = models.CharField(default="en",max_length=3)
     gender = models.CharField(max_length=6, choices=GENDER, default="N")
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
