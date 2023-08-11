@@ -12,6 +12,7 @@ from account.api.serializers import UserSerializer, UserLeaderboardSerializer
 from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import ResetPasswordRequestToken
 from .serializers import PasswordResetSerializer,PasswordResetConfirmSerializer
