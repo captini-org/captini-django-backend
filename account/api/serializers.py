@@ -1,4 +1,5 @@
 from account.models import User
+from captini.models import UserTaskScoreStats, Task, Prompt, Lesson, Topic
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils import timezone
@@ -10,6 +11,8 @@ from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 import os
 from CaptiniAPI.settings import SENDGRID_API_KEY,EMAIL_HOST_USER, RESET_PASSWORD_LINK, TEMPLATE_ID
+from django.db.models import Count, Avg, Sum
+
 class RegistrationSerializer(serializers.ModelSerializer):
     
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -62,11 +65,135 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
                 self.fields.pop(field_name)
     
 class UserSerializer(DynamicFieldsModelSerializer):
+    completed_tasks = serializers.SerializerMethodField()
+    completed_lessons = serializers.SerializerMethodField()
+    completed_topics = serializers.SerializerMethodField()
+    average_score = serializers.SerializerMethodField()
+    total_tasks = serializers.SerializerMethodField()
+    total_prompts = serializers.SerializerMethodField()
+    total_lessons = serializers.SerializerMethodField()
+    total_topics = serializers.SerializerMethodField()
+    total_tries = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'birthyear', 'nationality','score', 'global_rank', 'country_rank','native_language', 'display_language', 'gender', 'language_level', 'notification_setting_in_app', 'notification_setting_email', 'profile_photo']
-        read_only_fields = ['score', 'global_rank', 'country_rank']
+        fields = ['username', 'first_name', 'last_name', 'email', 'birthyear', 'nationality','score', 
+                  'global_rank', 'country_rank','native_language', 'display_language', 'gender', 
+                  'language_level', 'notification_setting_in_app', 'notification_setting_email', 
+                  'profile_photo', 'completed_tasks', 'completed_lessons', 'completed_topics', 'average_score',
+                  'total_tasks', 'total_prompts', 'total_lessons', 'total_topics', 'total_tries']
+        read_only_fields = ['score', 'global_rank', 'country_rank', 'completed_tasks', 
+                            'completed_lessons', 'completed_topics', 'average_score',
+                            'total_tests', 'total_prompts', 'total_lessons', 'total_tasks', 'total_topics', 'total_tries']
+
+    def get_completed_tasks(self, obj):
+        return UserTaskScoreStats.objects.filter(user_id=obj.id).count()
+        #return 1000
+
+    def get_completed_lessons(self, obj):
+        # Get all the lessons which have associated prompts
+        lessons = Lesson.objects.annotate(prompt_count=Count('prompts'))
+        
+        completed_lessons = 0
+        for lesson in lessons:
+            prompts = lesson.prompts.all()
+            prompts = prompts.annotate(task_count=Count('tasks'))
+            #prompts = lesson.prompts.all().annotate(task_count=Count('tasks'))
+            print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
+            
+            all_prompts_completed = True
+            print(lesson)
+            for prompt in prompts:
+                print(f"Checking prompt {prompt.id}")
+                completed_tasks_count = UserTaskScoreStats.objects.filter(
+                    user_id=obj.id,
+                    task__prompt=prompt
+                ).count()
+
+                print(f"Completed tasks for prompt {prompt.id}: {completed_tasks_count}/{prompt.task_count}")
+                    
+                if completed_tasks_count != prompt.task_count:
+                    print(completed_tasks_count)
+                    all_prompts_completed = False
+                    break
+
+            if all_prompts_completed:
+                completed_lessons += 1
+
+        for lesson in Lesson.objects.all():
+            prompts = lesson.prompts.all()
+            print(f"Lesson: {lesson.id}, Prompts: {[p.id for p in prompts]}")
+
+        return completed_lessons
+
+    def get_completed_topics(self, obj):
+
+        topics = Topic.objects.annotate(lesson_count=Count('lessons'))
+
+        completed_topics = 0
+        for topic in topics:
+            # Get all the lessons which have associated prompts
+            lessons = topic.lessons.all()
+
+            completed_lessons = 0
+            for lesson in lessons:
+                prompts = lesson.prompts.all().annotate(task_count=Count('tasks'))
+                print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
+                
+                all_prompts_completed = True
+                for prompt in prompts:
+                    completed_tasks_count = UserTaskScoreStats.objects.filter(
+                        user_id=obj.id,
+                        task__prompt=prompt
+                    ).count()
+
+                    print(f"Completed tasks for prompt {prompt.id}: {completed_tasks_count}/{prompt.task_count}")
+                        
+                    if completed_tasks_count != prompt.task_count:
+                        all_prompts_completed = False
+                        break
+
+                if all_prompts_completed:
+                    completed_lessons += 1
+
+            # Check if all lessons for a topic have been completed
+            if completed_lessons == lessons.count():
+                completed_topics += 1
+
+        return completed_topics
+
+
+    def get_average_score(self, obj):
+        avg_score = UserTaskScoreStats.objects.filter(user_id=obj.id)\
+            .aggregate(Avg('score_mean'))['score_mean__avg']
+
+        return avg_score if avg_score is not None else 0  # Or any other default value you want
+    
+    def get_total_tries(self, obj):
+        total_tries = UserTaskScoreStats.objects.filter(user_id=obj.id)\
+            .aggregate(Sum('number_tries'))['number_tries__sum']
+
+        return total_tries if total_tries is not None else 0
+    
+    def get_total_tasks(self, obj):
+        total_tasks = Task.objects.count()
+
+        return total_tasks
+    
+    def get_total_prompts(self, obj):
+        total_prompts = Prompt.objects.count()
+
+        return total_prompts
+    
+    def get_total_lessons(self, obj):
+        total_lessons = Lesson.objects.count()
+
+        return total_lessons
+    
+    def get_total_topics(self, obj):
+        total_topics = Topic.objects.count()
+
+        return total_topics
 
 class UserLeaderboardSerializer(serializers.ModelSerializer):
 
