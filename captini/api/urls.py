@@ -18,6 +18,8 @@ urlpatterns = [
     path("tasks/<int:pk>/", views.TaskDetails().as_view(), name="task-details"),
     path("tasks/<int:pk>/upload/", views.TaskRecordingUpload().as_view(), name="recording-upload"),
     path("tasks/<int:pk>/upload-example/", views.ExampleRecordingUpload().as_view(), name="example-upload"),
+    path("topics/search/", views.TopicSearch().as_view(), name="topic-search"),
+    path("topics/<int:pk>/lessons/search/", views.LessonSearch().as_view(), name="lesson-search"),
 ]
 
 urpatterns = format_suffix_patterns(urlpatterns)

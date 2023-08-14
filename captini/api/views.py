@@ -2,7 +2,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from captini.api.permissions import *
-
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
@@ -116,3 +117,28 @@ class ExampleRecordingUpload(generics.ListCreateAPIView):
     def get_queryset(self):
         pk = self.kwargs["pk"]
         return ExampleTaskRecording.objects.filter(pk=pk)
+
+class TopicSearch(generics.ListCreateAPIView):
+    serializer_class = TopicSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['topic_name']
+    search_fields = ['topic_name']
+
+    def get_queryset(self):
+        search_pattern = self.request.query_params.get('search')
+        if search_pattern:
+            return Topic.objects.filter(topic_name__icontains=search_pattern)
+        return Topic.objects.all()
+
+class LessonSearch(generics.ListCreateAPIView):
+    serializer_class = LessonSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['subject']
+    search_fields = ['subject']
+
+    def get_queryset(self):
+        search_pattern = self.request.query_params.get('search')
+        pk = self.kwargs["pk"]
+        if search_pattern:
+            return Lesson.objects.filter(subject__icontains=search_pattern,topic=pk)
+        return Lesson.objects.filter(topic=pk)

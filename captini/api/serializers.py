@@ -161,7 +161,6 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = "__all__"
 
-
     #def create(self, validated_data):
     #    topic_data = validated_data.pop('lessons')
     #    topic = Topic.objects.create(**validated_data)
