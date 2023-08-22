@@ -440,7 +440,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (135,'mynd – fimm',56,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (136,'fimmtudagur – samt',56,1);
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (5,'Samlaganir og brottföll (assimilations and deletions)', 'X', 5);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (22,5,'Brottfall sérhljóða (deletions of vowels)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which vowels are not pronounced).',5);
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (22,5,'Brottfall sérhljóða (deletions of vowels)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which vowels are not pronounced).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (154,'F52(1)','',22,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (329,'Ég ætla að fara heim.',154,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (330,'Ég borða ekki kjöt.',154,1);
@@ -462,7 +462,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (340,'Ha! Fan
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (160,'F52(7)','',22,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (341,'Viltu að ég hjálpi þér?',160,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (342,'Viltu að ég hjálpi honum?',160,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (25,5,'Setningar (sentences)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which letters are not pronounced).',1 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (25,5,'Setningar (sentences)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which letters are not pronounced).',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (175,'F55(1)','',25,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (375,'Ákveðinn greinir í fleirtölu.',175,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (376,'Þátíð veikra og sterkra sagna.',175,1);
