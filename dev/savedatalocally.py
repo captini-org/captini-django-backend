@@ -5,10 +5,10 @@ import psycopg2
 # Establish a connection to the PostgreSQL database
 conn = psycopg2.connect(
     host="localhost",
-    database="captini",
+    database="captiniM",
     user="postgres",
     password="",
-    port="5432"
+    port="5433"
 )
 
 cursor = conn.cursor()
