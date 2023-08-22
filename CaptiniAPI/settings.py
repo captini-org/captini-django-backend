@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from django.core.mail import send_mail
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
@@ -21,6 +22,7 @@ load_dotenv(find_dotenv())
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ['SECRET_KEY']
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,6 +57,14 @@ CORS_ALLOW_HEADERS = (
         'x-csrftoken'
 )
 
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+]
 
 CSRF_TRUSTED_ORIGINS = [
 
@@ -85,6 +95,7 @@ INSTALLED_APPS = [
     "django_rest_passwordreset",
     "corsheaders",
     'django_filters',
+    #'compositefk',
 ]
 
 REST_FRAMEWORK = {
@@ -131,7 +142,8 @@ WSGI_APPLICATION = "CaptiniAPI.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 # subject to change when we have production db
 DATABASES = {
-    "default": {
+    
+      "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": os.environ.get("DATABASE_NAME", "captini"),
         "USER": os.environ.get("DATABASE_USER", "django"),
@@ -163,15 +175,19 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "account.User"
 
 # Email
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini")
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIT_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini"),
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
-
-
+# temporary api key from Baha in .env
+SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
+RESET_PASSWORD_LINK = os.environ['RESET_PASSWORD_LINK']
+TEMPLATE_ID = os.environ['TEMPLATE_ID']
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -208,3 +224,11 @@ SIMPLE_JWT = {
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
 RABBITMQ_EXCHANGE = os.environ.get("RABBITMQ_EXCHANGE", "captini")
+
+# user photo registration
+STATIC_URL = "static/"
+
+MEDIA_URL = "recordings/"
+
+MEDIA_ROOT = "recordings"
+PHOTOS_URL = "profile_photos"

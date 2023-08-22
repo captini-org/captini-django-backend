@@ -1,9 +1,12 @@
+from CaptiniAPI import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
 import os
+#from compositefk.fields import CompositeForeignKey
+
 
 from account.models import User
 
@@ -37,9 +40,7 @@ class Prompt(models.Model):
 class Task(models.Model):
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
     task_text = models.CharField(max_length=255)
-    audio_url = models.CharField(blank=True, max_length=500)
     number = models.IntegerField(default=0)
-
     def __str__(self):
         return self.task_text
 
@@ -52,15 +53,63 @@ class UserPromptScore(models.Model):
     def __str__(self):
         return self.prompt_number
 
-def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}/{1}'.format(instance.user.id, filename)
+#Audit table that will be used to the statistics for the user
+class UserTaskScoreStats(models.Model):
+    user = models.ForeignKey(User, related_name='user_task_score', on_delete=models.CASCADE)
+    task =models.ForeignKey(Task, related_name='task_id_score', on_delete=models.CASCADE)
+    score_mean = models.IntegerField(default=0)
+    number_tries = models.IntegerField(default=1)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'task'],
+                name='unique_user_task'
+            )
+        ]
+
+### Function that is used to save all the recording keeping track only for the task id and gender
+def directory_path(instance, filename):
+    print(instance.task)
+    print(instance.gender)
+    path=settings.MEDIA_ROOT+'/users/recordings/{0}-{1}-{2}-{3}'.format(instance.task,instance.gender,filename)
+    return path
+
+def example_recording_directory_path(instance, filename):
+    return 'examples/task_{0}_{1}'.format(instance.task, instance.gender)
+
 
 class UserTaskRecording(models.Model):
     user = models.ForeignKey(User, related_name='task_recording', on_delete=models.CASCADE)
     task = models.ForeignKey(Task, related_name='task_recording', on_delete=models.CASCADE)
-    recording = models.FileField(upload_to=user_directory_path)
+    lesson = models.ForeignKey(Lesson, related_name='task_recording', on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
+    score =  models.IntegerField(default=0)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'task'],
+                name='unique_user_task_stats'
+            )
+        ]
+    #def save(self, *args, **kwargs):
+        # Save the model instance without the 'recording' field
+    #    print(*args)
+    #    super().save(*args, **kwargs)
+        # Save the 'recording' file locally if it's a new instance or the file has changed
+        
+
+    
+GENDER = [
+    ("M", "Male"),
+    ("F", "Female")
+]
+    
+class ExampleTaskRecording(models.Model):
+    task = models.ForeignKey(Task, related_name='task_example', on_delete=models.CASCADE)
+    gender = models.CharField(max_length=6, choices=GENDER, default="M")
+    recording = models.FileField(max_length=150, upload_to=example_recording_directory_path)
+    time_created = models.DateTimeField(auto_now_add=True)
+    
 
 
 @receiver(reset_password_token_created)
@@ -73,11 +122,16 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     send_mail(
         # title:
-        "Password Reset for captini",
+        "Password reset for captini",
         # message:
         email_plaintext_message,
         # from:
         "no-reply@tiro.is",
         # to:
-        [reset_password_token.user.email]
+        #[reset_password_token.user.email]
+        
+        # temporary test
+        ['tme1@hi.is'],
+        fail_silently=False
     )
+

@@ -1,7 +1,11 @@
-from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording
+import subprocess
+from captini.models import  Topic, Lesson, Prompt, Task, UserPromptScore, UserTaskRecording, ExampleTaskRecording , UserTaskScoreStats
+from account.models import User
 from rest_framework import serializers
 from rest_framework.test import APIRequestFactory
 import random
+import os
+from django.core.files.storage import default_storage
 
 factory = APIRequestFactory()
 request = factory.get('/')
@@ -13,16 +17,121 @@ class UserPromptScoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TaskRecordingSerializer(serializers.ModelSerializer):
-    random_score = serializers.SerializerMethodField()
+    recording = serializers.FileField()  # Assuming 'recording' is a CharField in your request
 
     class Meta:
         model = UserTaskRecording
+        fields = ['recording', 'user', 'task', 'lesson']
+
+    ### N.B. it will be fixed because actually it is running only in localhost when we will run the caitlin script in a real server it will work better
+    def calculateScore(self,output):
+        tot = 0
+        errors=[]
+        for line in output.splitlines()[1:]: # skip first line
+            if(line[0]!= '\t'):
+                words = line.split("\t")
+                tot=tot+1
+                if(float(words[1]) <-0.2):
+                    errors.append(words[0])
+
+        return 100*int((tot-len(errors))/tot),errors
+
+    def takeScoreRecording(self,validated_data):
+        recording = validated_data['recording']
+
+        # Use os.path.join to build the path (assumes you are running from captini-django-backend)
+        # script_path = os.path.join("..", "..", "modules", "pronunciation", "pronunciation-score-icelandic", "demo.py")
+
+        #print(script_path)
+
+        # Change the working directory to the directory of the script
+        # os.chdir(os.path.dirname(script_path))
+
+        # command = 'source ~/anaconda3/etc/profile.d/conda.sh; conda activate captinidemo; ~/anaconda3/envs/captinidemo/bin/python demo.py'
+
+        #output = subprocess.check_output(command, universal_newlines=True, shell=True)
+
+        # process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, executable="/bin/bash")
+        # output, err = process.communicate()
+        # print(output)
+
+        #script_path="/Users/davide/Desktop/connector/pronunciation-score-icelandic/demo.py"
+        #os.chdir("/Users/davide/Desktop/connector/pronunciation-score-icelandic/")
+        #command = ["python3", "-W", "ignore", script_path]
+        #output = subprocess.check_output(command, universal_newlines=True)
+        #return self.calculateScore(output)
+        return 100, []
+        
+    ### TODO async function with RabbitMQ to save the file with a queue
+    def saveRecordingLocally(self,validated_data):
+        ###PATH /pronunciation-score-icelandic/recordings/M4demo_j7bpKCm.wav
+        name=f"{validated_data['user'].gender}{validated_data['task'].id}{validated_data['recording'].name}"
+        filename = default_storage.get_available_name(name)
+        default_storage.save(filename, validated_data['recording'])
+        return filename
+
+    #Override of the creation to save the score inside the DB and modify the user total score 
+    def create(self, validated_data):
+        score, errors = self.takeScoreRecording(validated_data)
+        self.saveRecordingLocally(validated_data)
+        old_score = 0
+        scoring = {
+            'score_mean': score,
+            'task_id': validated_data['task'].id,
+            'user_id': validated_data['user'].id,
+            'number_tries': "1"
+        }
+
+        task_recording = UserTaskRecording.objects.filter(user=validated_data['user'], task=validated_data['task']).first()
+        if task_recording:
+            old_score = task_recording.score
+            task_recording.score = score
+
+            stats = UserTaskScoreStats.objects.filter(user=validated_data['user'], task=validated_data['task']).first()
+
+            if stats:
+                stats.score_mean = ((stats.score_mean * stats.number_tries) + score) / (stats.number_tries + 1)
+                stats.number_tries += 1
+                stats.save()
+            else:
+                # If the UserTaskScoreStats record doesn't exist, create a new one.
+                stats = UserTaskScoreStats.objects.create(
+                    user=validated_data['user'],
+                    task=validated_data['task'],
+                    score_mean=score,
+                    number_tries=1
+                )
+            task_recording.save()
+
+        else:
+            if 'recording' in validated_data:
+                del validated_data['recording']
+            task_recording = UserTaskRecording.objects.create(score=score, **validated_data)
+            stats = UserTaskScoreStats.objects.create(**scoring)
+
+        validated_data['user'].score = validated_data['user'].score + score - old_score
+        validated_data['user'].save()
+        task_recording.errors = errors
+
+        return task_recording
+
+    #Overwrite output
+    def to_representation(self, instance):
+        return {'task':instance.task.id,'score': instance.score, 'errors': instance.errors}
+    
+class UserTaskScoreStatsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTaskScoreStats
+        fields = '__all__'
+
+class ExampleRecordingSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ExampleTaskRecording
         fields = '__all__'
         
-    def get_random_score(self, obj):
-        return random.randrange(0, 100, 5)
-
 class TaskSerializer(serializers.ModelSerializer):
+    examples = ExampleRecordingSerializer(many=True, read_only=True, source='task_example')
     
     class Meta:
         model = Task
@@ -51,7 +160,6 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = "__all__"
-
 
     #def create(self, validated_data):
     #    topic_data = validated_data.pop('lessons')

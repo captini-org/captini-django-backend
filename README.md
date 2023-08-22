@@ -38,3 +38,9 @@ DATABASES = {
  `python manage.py runserver`   
  
 
+In case you need the data in the database locally run (the database generated has the correct numbering for the tasks).
+`cd dev`
+`pip install psycopg2`
+`python savedatalocally.py`
+N.B. set the database parameter in case oyu changed it.
+N.B. ope lesson parameter number has the same value of id. 
