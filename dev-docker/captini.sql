@@ -1,5 +1,5 @@
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (3,'Meira um sérhljóð (more on vowels)', 'X', 3);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (13,3,'Meira um löng sérhljóð (more on long vowels)','Sérhljóð eru löng þegar þau standa á undan p/t/k + r/v/j (vowels are long when they are followed by p/t/k + r/v/j).',0 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (13,3,'Meira um löng sérhljóð (more on long vowels)','Sérhljóð eru löng þegar þau standa á undan p/t/k + r/v/j (vowels are long when they are followed by p/t/k + r/v/j).',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (91,'F33(1)','',13,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (204,'lepja – apríl',91,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (205,'sitja – betra',91,1);
@@ -21,7 +21,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (215,'Ég hef
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (97,'F33(7)','',13,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (216,'Ég hef farið upp Esjuna mörgum sinnum.',97,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (217,'En ég hef aldrei farið til Ísraels.',97,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (12,3,'Sérhljóð á undan gi/gj (vowels before gi/gj)','Takið eftir sérhljóðunum á undan gi og gj (notice the vowels before gi and gj).',1 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (12,3,'Sérhljóð á undan gi/gj (vowels before gi/gj)','Takið eftir sérhljóðunum á undan gi og gj (notice the vowels before gi and gj).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (84,'F32(1)','',12,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (190,'daginn – lagið',84,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (191,'segja – segir',84,1);
@@ -43,7 +43,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (195,'Huginn 
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (90,'F32(7)','',12,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (202,'Bogi hefur áhuga á tónlist.',90,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (203,'Áhugi Boga liggur í tónlist.',90,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (11,3,'Sérhljóð á undan ng/nk (vowels before ng/nk)','Takið eftir sérhljóðunum á undan ng og nk (notice the vowels before ng and nk).',2 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (11,3,'Sérhljóð á undan ng/nk (vowels before ng/nk)','Takið eftir sérhljóðunum á undan ng og nk (notice the vowels before ng and nk).',1);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (77,'F31(1)','',11,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (176,'þangað – banki',77,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (177,'fingur – syngja',77,1);
@@ -65,7 +65,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (187,'Já, og
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (83,'F31(7)','',11,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (188,'Það eru oftast fimm fingur á einni hendi.',83,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (189,'Hinkraðu aðeins og syngdu eitt lag enn.',83,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (14,3,'Setningar (sentences)','Æfið sérhljóðin í setningunum (practise the vowels in the sentences).',3 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (14,3,'Setningar (sentences)','Æfið sérhljóðin í setningunum (practise the vowels in the sentences).',4);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (98,'F34(1)','',14,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (218,'Sjáiði! Þetta er Skógafoss.',98,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (219,'Skógafoss er neðsti fossinn í Skógaá.',98,1);
@@ -87,7 +87,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (229,'Engum h
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (104,'F34(7)','',14,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (230,'Undir Eyjafjöllum eru margir fossar.',104,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (231,'Seljalandsfoss, Skógafoss og Írárfoss.',104,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (15,3,'Setningar (sentences)','Æfið sérhljóðin í setningunum (practise the vowels in the sentences).',4 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (15,3,'Setningar (sentences)','Æfið sérhljóðin í setningunum (practise the vowels in the sentences).',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (105,'F35(1)','',15,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (232,'Góðan dag. Velkomin á Listasafn Íslands.',105,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (233,'Ég ætla að fá tvo miða.',105,1);
@@ -110,7 +110,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (244,'Viltu poka?',111,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (245,'Já takk, þrjá.',111,1);
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (4,'Meira um samhljóð (more on consonants)', 'X', 4);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (16,4,'Aðblástur (preaspiration)','Takið eftir aðblæstri, h-hljóði, í eftirfarandi orðum (notice preaspiration, an h sound, in the following words).',0 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (16,4,'Aðblástur (preaspiration)','Takið eftir aðblæstri, h-hljóði, í eftirfarandi orðum (notice preaspiration, an h sound, in the following words).',1);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (112,'F41(1)','',16,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (246,'upplýsingar – appið',112,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (247,'náttúra – þetta',112,1);
@@ -131,7 +131,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (257,'Bettý 
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (118,'F41(7)','',16,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (258,'Hér eru átta flottar blokkir.',118,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (259,'Hrekkjavaka er gamall írskur siður.',118,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (18,4,'Önghljóðun (fricativisation)','Takið eftir hvernig stafirnir eru bornir fram öðruvísi en venjulega á undan t (notice how the letters are pronounced differently than usual before t).',1 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (18,4,'Önghljóðun (fricativisation)','Takið eftir hvernig stafirnir eru bornir fram öðruvísi en venjulega á undan t (notice how the letters are pronounced differently than usual before t).',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (126,'F43(1)','',18,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (273,'sagt – byggt',126,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (274,'sekt – slökkti',126,1);
@@ -153,7 +153,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (284,'Það s
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (132,'F43(7)','',18,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (285,'hægt – hætt',132,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (286,'Haustfríið er í október.',132,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (20,4,'t-innskot (t epenthesis)','Takið eftir auka t-hljóði í sumum stafasamböndum (notice how some letter combinations are pronounced with an extra t sound).',2 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (20,4,'t-innskot (t epenthesis)','Takið eftir auka t-hljóði í sumum stafasamböndum (notice how some letter combinations are pronounced with an extra t sound).',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (140,'F45(1)','',20,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (301,'perla – snarl',140,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (302,'hérna – þarna',140,1);
@@ -175,7 +175,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (312,'Finndu 
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (146,'F45(7)','',20,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (313,'Opnaðu ofninn!',146,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (314,'Barnið vaknaði í vagninum.',146,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (17,4,'Afröddun (devoicing)','Takið eftir órödduðu hljóðunum á undan p, t og k (notice the unvoiced sounds before p, t, and k).',3 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (17,4,'Afröddun (devoicing)','Takið eftir órödduðu hljóðunum á undan p, t og k (notice the unvoiced sounds before p, t, and k).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (119,'F42(1)','',17,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (260,'hjálpa – úlpa',119,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (261,'hollt – kalt',119,1);
@@ -220,10 +220,10 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (299,'Það rignir í logni.',139,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (300,'Þetta er algjört rugl!',139,1);
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (6,'Hrynjandi (prosody)', 'X', 6);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (26,6,'Sérhljóð í áhersluleysi (unstressed vowels)','Takið eftir sérhljóðunum a, i og u í seinni hluta orða (notice the vowels a, i, u in other syllables than the first one.',0 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (26,6,'Sérhljóð í áhersluleysi (unstressed vowels)','Takið eftir sérhljóðunum a, i og u í seinni hluta orða (notice the vowels a, i, u in other syllables than the first one.',1);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (182,'F61(1)','',26,1);
-INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (390,'Ég er glaður, þeir eru glaðir, þær eru glaðar.',182,0);
-INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (389,'kæri – kæra – kæru',182,1);
+INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (390,'Ég er glaður, þeir eru glaðir, þær eru glaðar.',182,1);
+INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (389,'kæri – kæra – kæru',182,0);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (183,'F61(2)','',26,2);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (391,'Hann veiddi fisk en þau veiddu humar.',183,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (392,'Finnst þér gaman að veiða fisk?',183,1);
@@ -241,7 +241,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (399,'Ég fer
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (188,'F61(7)','',26,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (400,'16. (sextándi) nóvember er dagur íslenskrar tungu.',188,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (401,'Á degi íslenskrar tungu eru margir viðburðir.',188,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (28,6,'Áhersla alltaf á fyrsta atkvæði (stress is always on the first syllable)','Í íslensku er áhersla alltaf á fyrsta atkvæði orðs (in Icelandic, stress is always on the first syllable of a word).',1 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (28,6,'Áhersla alltaf á fyrsta atkvæði (stress is always on the first syllable)','Í íslensku er áhersla alltaf á fyrsta atkvæði orðs (in Icelandic, stress is always on the first syllable of a word).',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (196,'F63(1)','',28,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (416,'Bróðir minn er íþróttafréttamaður.',196,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (417,'Systir mín vinnur í Utanríkisráðuneytinu.',196,1);
@@ -263,7 +263,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (427,'Ég key
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (202,'F63(7)','',28,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (428,'Framburðaræfingarnar eru skemmtilegar.',202,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (429,'Í gær lærði ég nýtt lýsingarorð.',202,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (29,6,'Setningaráhersla (sentence stress)','Takið eftir hvaða orð í setningunum hafa áherslu (notice which words in the sentences are stressed).',2 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (29,6,'Setningaráhersla (sentence stress)','Takið eftir hvaða orð í setningunum hafa áherslu (notice which words in the sentences are stressed).',4);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (203,'F64(1)','',29,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (430,'Hann fer á morgun.',203,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (431,'Penninn er á borðinu.',203,1);
@@ -288,7 +288,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (443,'Ég æt
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (216,'F65(7)','',29,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (456,'Mér fannst þetta bara svo ótrúlega spennandi.',216,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (457,'Bless í bili.',216,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (27,6,'Áhersla (stress)','Takið eftir orðum í setningunum sem bera áherslu (notice which words in the sentences are stressed).',3 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (27,6,'Áhersla (stress)','Takið eftir orðum í setningunum sem bera áherslu (notice which words in the sentences are stressed).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (189,'F62(1)','',27,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (402,'Ég horfði á hann.',189,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (403,'Talaðu við hana.',189,1);
@@ -310,7 +310,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (413,'Hún f�
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (195,'F62(7)','',27,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (414,'Hann fór frá honum.',195,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (415,'Ég hlustaði á þá.',195,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (30,6,'Setningar (sentences)','Takið eftir hrynjandi í setningunum (notice the pattern of stress and intonation in the sentences).',4 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (30,6,'Setningar (sentences)','Takið eftir hrynjandi í setningunum (notice the pattern of stress and intonation in the sentences).',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (210,'F65(1)','',30,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (444,'Nú, vissir þú það?',210,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (445,'Nei! Það kom mér svolítið á óvart!',210,1);
@@ -330,7 +330,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (454,'Hittumst klukkan hálfsjö.',215,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (455,'Mig langar að fara til Nýja-Sjálands.',215,1);
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (2,'Samhljóð (consonants)', 'X HÉR ER KRAFIST TEXTA SEM EKKI ER ÞÖRF Á ATH', 2);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (7,2,'Önghljóð (fricatives)','Hlustið á framburð f, v, þ, ð, s, j, k, g, h (listen to the pronunciation of f, v, þ, ð, s, j, k, g, h).',0 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (7,2,'Önghljóð (fricatives)','Hlustið á framburð f, v, þ, ð, s, j, k, g, h (listen to the pronunciation of f, v, þ, ð, s, j, k, g, h).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (49,'F22(1)','',7,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (121,'fyndin – kaffi',49,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (122,'veit – skrifa',49,1);
@@ -374,7 +374,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (118,'Viltu f
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (48,'F21(7)','',6,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (119,'Hvað er klukkan?',48,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (120,'Kári talar pólsku.',48,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (10,2,'Löng og stutt samhljóð (long and short consonants)','Takið eftir muninum á löngum og stuttum samhljóðum inni í orðum og í lok orða (notice the difference between long and short consonant sounds inside and at the end of words)  INSIDE?',2 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (10,2,'Löng og stutt samhljóð (long and short consonants)','Takið eftir muninum á löngum og stuttum samhljóðum inni í orðum og í lok orða (notice the difference between long and short consonant sounds inside and at the end of words)  INSIDE?',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (70,'F25(1)','',10,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (163,'Ég sit á kaffihúsi.',70,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (164,'Ég borða köku með rjóma.',70,1);
@@ -395,7 +395,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (173,'Ég ver
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (174,'Pabbi sá apa í garðinum.',75,1);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (76,'F25(7)','',10,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (175,'Hanna bakar pönnukökur með þeyttum rjóma og jarðarberjasultu.',76,0);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (9,2,'Hliðar- og sveifluhljóð (laterals and trills)','Hlustið á framburð l og r (listen to the pronunciation of l og r ). NÝTT',3 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (9,2,'Hliðar- og sveifluhljóð (laterals and trills)','Hlustið á framburð l og r (listen to the pronunciation of l og r ). NÝTT',4 );
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (63,'F24(1)','',9,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (149,'linur – hlynur',63,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (150,'ljóð – hljóð',63,1);
@@ -417,7 +417,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (161,'Er þa�
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (68,'F24(6)','',9,6);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (159,'Viltu hjálpa mér?',68,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (160,'Já, ekkert mál!',68,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (8,2,'Nefhljóð (nasals)','Hlustið á framburð m og n (listen to the pronunciation of m and n).  NÝTT',4 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (8,2,'Nefhljóð (nasals)','Hlustið á framburð m og n (listen to the pronunciation of m and n).  NÝTT',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (57,'F23(2)','',8,2);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (137,'Nói',57,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (138,'sunnudagur',57,1);
@@ -440,7 +440,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (135,'mynd – fimm',56,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (136,'fimmtudagur – samt',56,1);
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (5,'Samlaganir og brottföll (assimilations and deletions)', 'X', 5);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (22,5,'Brottfall sérhljóða (deletions of vowels)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which vowels are not pronounced).',0 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (22,5,'Brottfall sérhljóða (deletions of vowels)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which vowels are not pronounced).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (154,'F52(1)','',22,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (329,'Ég ætla að fara heim.',154,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (330,'Ég borða ekki kjöt.',154,1);
@@ -462,7 +462,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (340,'Ha! Fan
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (160,'F52(7)','',22,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (341,'Viltu að ég hjálpi þér?',160,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (342,'Viltu að ég hjálpi honum?',160,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (25,5,'Setningar (sentences)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which letters are not pronounced).',1 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (25,5,'Setningar (sentences)','Takið eftir hvaða bókstafir eru ekki bornir fram (notice which letters are not pronounced).',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (175,'F55(1)','',25,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (375,'Ákveðinn greinir í fleirtölu.',175,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (376,'Þátíð veikra og sterkra sagna.',175,1);
@@ -484,7 +484,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (386,'Jónas 
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (181,'F55(7)','',25,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (387,'Jónas Hallgrímsson bjó til orð.',181,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (388,'Til dæmis: aðdráttarafl, sjónauki og sporbaugur.',181,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (21,5,'„h“ og „þ“ breytast (“h” and “þ” change)','Takið eftir hvernig „h“ og „þ“ breytast í framburði eða hverfa algerlega (notice how “h” and “þ” change in pronunciation or are deleted completely).',2 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (21,5,'„h“ og „þ“ breytast (“h” and “þ” change)','Takið eftir hvernig „h“ og „þ“ breytast í framburði eða hverfa algerlega (notice how “h” and “þ” change in pronunciation or are deleted completely).',1);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (147,'F51(1)','',21,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (315,'Heitir hún Hanna?',147,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (316,'Ég sé hann!',147,1);
@@ -555,7 +555,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (373,'Strjúktu yfir skjáinn til að opna.',174,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (374,'Við byggðum nýjan sumarbústað.',174,1);
 INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (1,'Sérhljóð (vowels)', 'Bókstafir – hljóð (letters – sounds)', 1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (5,1,'Orðapör (word pairs)','Athugið ólík sérhljóð í orðunum (note the different vowels in the words).',0 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (5,1,'Orðapör (word pairs)','Athugið ólík sérhljóð í orðunum (note the different vowels in the words).',5);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (35,'F15(1)','E : I/Y : Í/Ý',5,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (92,'lest – list – líst',35,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (93,'Dísa les mikið.',35,1);
@@ -644,7 +644,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (40,'við –
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (41,'sími',9,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (458,'Þýskaland – íslenska – lýsa',9,2);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (459,'vinna – synda',9,3);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (4,1,'Setningar (sentences)','Æfið sérhljóðin í setningunum (practise the vowels in the sentences).',2 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (4,1,'Setningar (sentences)','Æfið sérhljóðin í setningunum (practise the vowels in the sentences).',4);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (28,'F14(1)','',4,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (80,'Þetta er gömul stytta.',28,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (81,'Styttan er í Reykjavík.',28,1);
@@ -664,7 +664,7 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (89,'Er þett
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (34,'F14(7)','',4,7);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (90,'Við ætlum að fara í Nauthólsvík.',34,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (91,'Munið að taka með handklæði!',34,1);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (2,1,'Löng og stutt sérhljóð (long and short vowels)','Takið eftir muninum á löngum og stuttum sérhljóðum (notice the difference in pronunciation between long and short vowels).',4 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (2,1,'Löng og stutt sérhljóð (long and short vowels)','Takið eftir muninum á löngum og stuttum sérhljóðum (notice the difference in pronunciation between long and short vowels).',2);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (16,'F12(3)','',2,3);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (56,'Þetta er taskan mín.',16,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (57,'Er þetta taskan þín?',16,1);
@@ -688,7 +688,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (50,'hvar – taska',14,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (51,'mín – íslenska',14,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (52,'þau – austur',14,2);
-INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (3,1,'Sérhljóð sem eru lík í framburði (vowels with similar pronunciation)','Takið eftir hvernig bókstafirnir tákna mismunandi sérhljóð (notice how the letters represent different vowel sounds).',5 );
+INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (3,1,'Sérhljóð sem eru lík í framburði (vowels with similar pronunciation)','Takið eftir hvernig bókstafirnir tákna mismunandi sérhljóð (notice how the letters represent different vowel sounds).',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (25,'F13(5)','',3,5);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (74,'Við sendum bréf til Englands.',25,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (75,'Hvert sendið þið bréf?',25,1);
@@ -713,5 +713,5 @@ INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (463,'læra �
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (23,'F13(3)','O : Ó : Ö',3,3);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (70,'for – fór – för',23,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (71,'fornum – fórnum – förnum',23,1);
-INSERT INTO account_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, country_rank, global_rank, nationality, score, gender, language_level, native_language, notification_setting_email, notification_setting_in_app, profile_photo, display_language, birthyear) VALUES (1,'password1', '2023-06-22 00:00:00+00', false, 'user1', 'John', 'Doe', 'john.doe@example.com', true, true, '2023-06-21 09:15:00+00', 1, 10, 'USA', 1000, 'Male', 'Int', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (2,'password2', '2023-06-21 00:00:00+00', false, 'user2', 'Jane', 'Smith', 'jane.smith@example.com', true, true, '2023-06-20 13:45:00+00', 1, 9, 'Canada', 2000, 'Female', 'Adv', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (3,'password3', '2023-06-20 00:00:00+00', false, 'user3', 'David', 'Johnson', 'david.johnson@example.com', true, true, '2023-06-19 18:30:00+00', 1, 8, 'Australia', 3000, 'Male', 'Beg', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (4,'password4', '2023-06-19 00:00:00+00', false, 'user4', 'Emily', 'Brown', 'emily.brown@example.com', true, true, '2023-06-18 10:00:00+00', 1, 7, 'UK', 4000, 'Female', 'Int', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (5,'password5', '2023-06-18 00:00:00+00', false, 'user5', 'Michael', 'Wilson', 'michael.wilson@example.com', true, true, '2023-06-17 15:20:00+00', 1, 6, 'Germany', 5000, 'Male', 'Adv', 'German - Deutsch', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (6,'password6', '2023-06-17 00:00:00+00', false, 'user6', 'Sarah', 'Miller', 'sarah.miller@example.com', true, true, '2023-06-16 20:55:00+00', 1, 5, 'France', 6000, 'Female', 'Int', 'French - français', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (7,'password7', '2023-06-16 00:00:00+00', false, 'user7', 'Christopher', 'Anderson', 'christopher.anderson@example.com', true, true, '2023-06-15 11:10:00+00', 1, 4, 'Sweden', 7000, 'Male', 'Beg', 'Swedish - svenska', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (8,'password8', '2023-06-15 00:00:00+00', false, 'user8', 'Olivia', 'Taylor', 'olivia.taylor@example.com', true, true, '2023-06-14 14:35:00+00', 1, 3, 'Spain', 8000, 'Female', 'Adv', 'Spanish - español', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (9,'password9', '2023-06-14 00:00:00+00', false, 'user9', 'Ethan', 'Lewis', 'ethan.lewis@example.com', true, true, '2023-06-13 09:45:00+00', 1, 2, 'Italy', 9000, 'Male', 'Int', 'Italian (Italy) - italiano', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (10,'password10', '2023-06-13 00:00:00+00', false, 'user10', 'Ava', 'Martinez', 'ava.martinez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (11,'password11', '2023-06-13 00:00:00+00', false, 'user11', 'Ava', 'Martinez', 'ava1.martinez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (12,'password10', '2023-06-13 00:00:00+00', false, 'user12', 'Ava', 'Martinez', 'ava.marti11nez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (13,'password13', '2023-06-13 00:00:00+00', false, 'user13', 'Ava', 'Martinez', 'ava2.martinsez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (14,'password14', '2023-06-13 00:00:00+00', false, 'user14', 'Ava', 'Martinez', 'a4.martinsez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), (15,'password15', '2023-06-13 00:00:00+00', false, 'user15', 'Ava', 'Martinez', 'av5.martinsez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990')
-/*INSERT INTO captini_usertaskscorestats (id, score_mean, number_tries, task_id, user_id) VALUES (1, 90, 3, 188, 2),(2, 90, 3, 132, 2), (3, 82, 1, 310, 3), (4, 89, 1, 40, 4), (5, 78, 2, 97, 5), (6, 92, 4, 253, 6), (7, 88, 3, 11, 7), (8, 84, 2, 312, 8), (9, 83, 1, 1, 9), (10, 91, 1, 160, 10), (11, 86, 2, 215, 11), (12, 87, 1, 98, 11),  (14, 82, 1, 292, 14), (15, 89, 2, 212, 15), (16, 90, 1, 120, 2), (17, 85, 2, 335, 3), (18, 86, 3, 432, 4), (19, 88, 4, 412, 5), (20, 82, 2, 95, 6), (21, 87, 1, 112, 7), (22, 89, 3, 72, 8), (23, 84, 1, 32, 9), (24, 90, 2, 86, 10), (25, 81, 1, 90, 11), (26, 87, 3, 256, 11), (28, 85, 4, 390, 14), (29, 89, 1, 225, 15), (30, 88, 2, 16, 2), (31, 84, 1, 56, 3), (32, 87, 2, 139, 4), (33, 90, 3, 212, 5), (34, 86, 1, 307, 6), (35, 89, 2, 95, 7), (36, 82, 1, 119, 8), (37, 84, 3, 254, 9), (38, 86, 2, 300, 10), (39, 88, 1, 450, 11), (40, 87, 4, 150, 11), (42, 90, 1, 330, 14), (43, 85, 2, 231, 15), (44, 87, 1, 95, 2), (45, 90, 3, 90, 3), (46, 86, 2, 262, 4), (47, 88, 1, 400, 5), (48, 84, 2, 35, 6), (49, 85, 3, 50, 7), (50, 86, 1, 150, 8);*/
+INSERT INTO account_user (password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, country_rank, global_rank, nationality, score, gender, language_level, native_language, notification_setting_email, notification_setting_in_app, profile_photo, display_language, birthyear) VALUES ('password1', '2023-06-22 00:00:00+00', false, 'user1', 'John', 'Doe', 'john.doe@example.com', true, true, '2023-06-21 09:15:00+00', 1, 10, 'USA', 1000, 'Male', 'Int', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password2', '2023-06-21 00:00:00+00', false, 'user2', 'Jane', 'Smith', 'jane.smith@example.com', true, true, '2023-06-20 13:45:00+00', 1, 9, 'Canada', 2000, 'Female', 'Adv', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password3', '2023-06-20 00:00:00+00', false, 'user3', 'David', 'Johnson', 'david.johnson@example.com', true, true, '2023-06-19 18:30:00+00', 1, 8, 'Australia', 3000, 'Male', 'Beg', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password4', '2023-06-19 00:00:00+00', false, 'user4', 'Emily', 'Brown', 'emily.brown@example.com', true, true, '2023-06-18 10:00:00+00', 1, 7, 'UK', 4000, 'Female', 'Int', 'English', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password5', '2023-06-18 00:00:00+00', false, 'user5', 'Michael', 'Wilson', 'michael.wilson@example.com', true, true, '2023-06-17 15:20:00+00', 1, 6, 'Germany', 5000, 'Male', 'Adv', 'German - Deutsch', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password6', '2023-06-17 00:00:00+00', false, 'user6', 'Sarah', 'Miller', 'sarah.miller@example.com', true, true, '2023-06-16 20:55:00+00', 1, 5, 'France', 6000, 'Female', 'Int', 'French - français', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password7', '2023-06-16 00:00:00+00', false, 'user7', 'Christopher', 'Anderson', 'christopher.anderson@example.com', true, true, '2023-06-15 11:10:00+00', 1, 4, 'Sweden', 7000, 'Male', 'Beg', 'Swedish - svenska', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password8', '2023-06-15 00:00:00+00', false, 'user8', 'Olivia', 'Taylor', 'olivia.taylor@example.com', true, true, '2023-06-14 14:35:00+00', 1, 3, 'Spain', 8000, 'Female', 'Adv', 'Spanish - español', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password9', '2023-06-14 00:00:00+00', false, 'user9', 'Ethan', 'Lewis', 'ethan.lewis@example.com', true, true, '2023-06-13 09:45:00+00', 1, 2, 'Italy', 9000, 'Male', 'Int', 'Italian (Italy) - italiano', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990'), ('password10', '2023-06-13 00:00:00+00', false, 'user10', 'Ava', 'Martinez', 'ava.martinez@example.com', true, true, '2023-06-12 16:25:00+00', 1, 1, 'Brazil', 10000, 'Female', 'Adv', 'Portuguese - português', true, true, '../recordings/user/profile_photos/puffin.jpg', 'en', '1990')
+/*INSERT INTO captini_usertaskscorestats (id, score_mean, number_tries, task_id, user_id) VALUES (2, 90, 3, 132, 2), (3, 82, 1, 310, 3), (4, 89, 1, 40, 4), (5, 78, 2, 97, 5), (6, 92, 4, 253, 6), (7, 88, 3, 11, 7), (8, 84, 2, 312, 8), (9, 83, 1, 1, 9), (10, 91, 1, 160, 10), (11, 86, 2, 215, 11), (12, 87, 1, 98, 11), (13, 88, 3, 58, 13), (14, 82, 1, 292, 14), (15, 89, 2, 212, 15), (16, 90, 1, 120, 2), (17, 85, 2, 335, 3), (18, 86, 3, 432, 4), (19, 88, 4, 412, 5), (20, 82, 2, 95, 6), (21, 87, 1, 112, 7), (22, 89, 3, 72, 8), (23, 84, 1, 32, 9), (24, 90, 2, 86, 10), (25, 81, 1, 90, 11), (26, 87, 3, 256, 11), (27, 88, 2, 168, 13), (28, 85, 4, 390, 14), (29, 89, 1, 225, 15), (30, 88, 2, 16, 2), (31, 84, 1, 56, 3), (32, 87, 2, 139, 4), (33, 90, 3, 212, 5), (34, 86, 1, 307, 6), (35, 89, 2, 95, 7), (36, 82, 1, 119, 8), (37, 84, 3, 254, 9), (38, 86, 2, 300, 10), (39, 88, 1, 450, 11), (40, 87, 4, 150, 11), (41, 82, 2, 70, 13), (42, 90, 1, 330, 14), (43, 85, 2, 231, 15), (44, 87, 1, 95, 2), (45, 90, 3, 90, 3), (46, 86, 2, 262, 4), (47, 88, 1, 400, 5), (48, 84, 2, 35, 6), (49, 85, 3, 50, 7), (50, 86, 1, 150, 8);*/
