@@ -149,12 +149,11 @@ if(not docker):
     DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "captini",
-        "USER": "postgres",
-        "PASSWORD": "",
-        "HOST": "localhost",
-        "PORT": "5433",
-        "charset": "utf8",
+        "NAME": os.environ.get("DATABASE_NAME", "captini"),
+        "USER": os.environ.get("DATABASE_USER", "django"),
+        "HOST": os.environ.get("DATABASE_HOST", "db"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "django"),
+        "PORT": os.environ.get("DATABASE_PORT", "5432"),
     }
 }
 else:

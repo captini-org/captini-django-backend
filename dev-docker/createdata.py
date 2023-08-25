@@ -2,13 +2,15 @@
 
 import psycopg2
 import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 # Establish a connection to the PostgreSQL database
 conn = psycopg2.connect(
-    host=os.environ.get("DATABASE_HOST", "localhost"),
+    host=os.environ.get("DATABASE_HOST", "db"),
     database=os.environ.get("DATABASE_NAME", "captini"),
-    user=os.environ.get("DATABASE_USER", "postgres"),
-    password=os.environ.get("DATABASE_PASSWORD", ""),
-    port=os.environ.get("DATABASE_PORT", "5433"),
+    user= os.environ.get("DATABASE_USER", "django"),
+    password=os.environ.get("DATABASE_PASSWORD", "django"),
+    port=os.environ.get("DATABASE_PORT", "5432"),
 )
 
 cursor = conn.cursor()
@@ -31,6 +33,8 @@ with open('captini.sql', encoding='utf-8') as file:
     for line in file:
         cursor.execute(line)                    
         conn.commit()
+cursor.close()
+cursor = conn.cursor()
 cursor.execute("DELETE FROM captini_exampletaskrecording;")
 conn.commit()
 with open('audio.sql', encoding='utf-8') as file:
