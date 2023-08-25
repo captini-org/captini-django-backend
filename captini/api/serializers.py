@@ -6,6 +6,10 @@ from rest_framework.test import APIRequestFactory
 import random
 import os
 from django.core.files.storage import default_storage
+import pika
+import json 
+import uuid
+import threading
 
 factory = APIRequestFactory()
 request = factory.get('/')
@@ -23,6 +27,13 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         model = UserTaskRecording
         fields = ['recording', 'user', 'task', 'lesson']
 
+    #Opening connection
+    def openConnection(self):
+        self.response_event = threading.Event()
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='connector-rabbitmq-1'))
+        self.channel = self.connection.channel()
+        self.session_id= str(uuid.uuid4())
+
     ### N.B. it will be fixed because actually it is running only in localhost when we will run the caitlin script in a real server it will work better
     def calculateScore(self,output):
         tot = 0
@@ -36,32 +47,40 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
 
         return 100*int((tot-len(errors))/tot),errors
 
-    def takeScoreRecording(self,validated_data):
-        recording = validated_data['recording']
+    def takeScoreRecording(self,validated_data, filename):
+        print("Open connection")
+        self.openConnection()
+        print(validated_data['task'].task_text)
+        message_data = {
+            "audio_path": "recordings/"+filename,
+            "session_id": self.session_id,
+            "text_id": validated_data['task'].task_text,
+            "speaker_id": validated_data['user'].id,
+        }
+        print(message_data)
+        #Send Message
+        routing_key = 'SYNC_SPEECH_INPUT'
 
-        # Use os.path.join to build the path (assumes you are running from captini-django-backend)
-        # script_path = os.path.join("..", "..", "modules", "pronunciation", "pronunciation-score-icelandic", "demo.py")
-
-        #print(script_path)
-
-        # Change the working directory to the directory of the script
-        # os.chdir(os.path.dirname(script_path))
-
-        # command = 'source ~/anaconda3/etc/profile.d/conda.sh; conda activate captinidemo; ~/anaconda3/envs/captinidemo/bin/python demo.py'
-
-        #output = subprocess.check_output(command, universal_newlines=True, shell=True)
-
-        # process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, executable="/bin/bash")
-        # output, err = process.communicate()
-        # print(output)
-
-        #script_path="/Users/davide/Desktop/connector/pronunciation-score-icelandic/demo.py"
-        #os.chdir("/Users/davide/Desktop/connector/pronunciation-score-icelandic/")
-        #command = ["python3", "-W", "ignore", script_path]
-        #output = subprocess.check_output(command, universal_newlines=True)
-        #return self.calculateScore(output)
-        return 100, []
+        self.channel.basic_publish(
+            exchange="",
+            routing_key=routing_key,
+            body=json.dumps(message_data)
+        )
+        print(f'[x]{message_data} sent to {routing_key}')
+        # Wait until you don t get reply
+        return 0,""
         
+    def callback(self, ch, method, properties, body):
+        if properties.correlation_id == self.session_id:
+            response_data = json.loads(body)
+            print(response_data)
+            self.response_event.set()
+
+        ch.close()
+
+    def close_connection(self):
+        self.connection.close()
+
     ### TODO async function with RabbitMQ to save the file with a queue
     def saveRecordingLocally(self,validated_data):
         ###PATH /pronunciation-score-icelandic/recordings/M4demo_j7bpKCm.wav
@@ -72,8 +91,8 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
 
     #Override of the creation to save the score inside the DB and modify the user total score 
     def create(self, validated_data):
-        score, errors = self.takeScoreRecording(validated_data)
-        self.saveRecordingLocally(validated_data)
+        filename=self.saveRecordingLocally(validated_data)
+        score, errors = self.takeScoreRecording(validated_data,filename)
         old_score = 0
         scoring = {
             'score_mean': score,
