@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,7 +10,6 @@ from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSer
 from account import models
 from account.api.serializers import UserSerializer, UserLeaderboardSerializer
 from captini.api.permissions import *
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
@@ -138,3 +137,19 @@ class PasswordResetConfirmView(generics.UpdateAPIView):
         user.save()
 
         return Response({'detail': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deactivate_account(request):
+    if request.method == "POST":
+        try:
+            userid = request.data.get("id")
+            print(userid)
+            user = User.objects.get(pk=userid)
+            user.is_active = False
+            user.save()
+            return Response({"message": "Account deactivated successfully."}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": "Failed to deactivate account."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
