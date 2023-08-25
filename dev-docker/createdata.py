@@ -1,14 +1,14 @@
 ### File that will execute all the query locally
 
 import psycopg2
-
+import os
 # Establish a connection to the PostgreSQL database
 conn = psycopg2.connect(
-    host="db",
-    database="captini",
-    user="django",
-    password="django",
-    port="5432"
+    host=os.environ.get("DATABASE_HOST", "localhost"),
+    database=os.environ.get("DATABASE_NAME", "captini"),
+    user=os.environ.get("DATABASE_USER", "postgres"),
+    password=os.environ.get("DATABASE_PASSWORD", ""),
+    port=os.environ.get("DATABASE_PORT", "5433"),
 )
 
 cursor = conn.cursor()
