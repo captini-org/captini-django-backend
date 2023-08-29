@@ -24,6 +24,8 @@ load_dotenv(find_dotenv())
 SECRET_KEY = os.environ['SECRET_KEY']
 
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,6 +37,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+docker=True #it will change the db parameters
+
 
 ALLOWED_HOSTS = ["0.0.0.0"]
 
@@ -141,17 +145,28 @@ WSGI_APPLICATION = "CaptiniAPI.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 # subject to change when we have production db
-DATABASES = {
+if(not docker):
+    DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "captiniM",
-        "USER": "postgres",
-        "PASSWORD": "",
-        "HOST": "localhost",
-        "PORT": "5433",
-        "charset": "utf8",
+        "NAME": os.environ.get("DATABASE_NAME", "captini"),
+        "USER": os.environ.get("DATABASE_USER", "django"),
+        "HOST": os.environ.get("DATABASE_HOST", "db"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "django"),
+        "PORT": os.environ.get("DATABASE_PORT", "5432"),
     }
 }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": os.environ.get("DATABASE_NAME", "captini"),
+            "USER": os.environ.get("DATABASE_USER", "postgres"),
+            "HOST": os.environ.get("DATABASE_HOST", "localhost"),
+            "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+            "PORT": os.environ.get("DATABASE_PORT", "5433"),
+        }
+    }
 
 
 # Password validation

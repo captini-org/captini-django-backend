@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from account.api.views import  UserDetails, UserUpdateProfileView, registration_view, UserList, MyTokenObtainPairView,PasswordResetView,PasswordResetConfirmView, change_password, deactivate_account
+from account.api.views import  UserDetails, UserUpdateProfileView, registration_view, UserList, MyTokenObtainPairView,PasswordResetView,PasswordResetConfirmView, change_password, deactivate_account, ActivateAccountView,ConfirmAccountActivationView
 
 urlpatterns = [
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -18,4 +18,6 @@ urlpatterns = [
     path('api/password-confirm/', PasswordResetConfirmView.as_view(), name='password-confirm'),
     path('api/change_password/',change_password, name='change_password'),
     path('api/deactivate_account/',deactivate_account, name='deactivate_account'),
+    path('api/activate_account/',ActivateAccountView.as_view(), name='activate_account'),
+    path('api/reactivate_account/',ConfirmAccountActivationView.as_view(), name='reactivate_account'),
 ]
