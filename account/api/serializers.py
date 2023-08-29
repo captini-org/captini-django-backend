@@ -16,6 +16,7 @@ from dotenv import load_dotenv, find_dotenv
 from rest_framework.exceptions import AuthenticationFailed
 load_dotenv(find_dotenv())
 ACTIVATE_ACCOUNT_LINK = os.environ['ACTIVATE_ACCOUNT_LINK']
+REACTIVATE_ACCOUNT_LINK= os.environ['REACTIVATE_ACCOUNT_LINK']
 class RegistrationSerializer(serializers.ModelSerializer):
     
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -292,7 +293,7 @@ class DeactivateAccountSerializer(serializers.Serializer):
             <p>This email confirms that your CAPTinI account has been temporarily deactivated.</p>
             <p>We are really sorry to see you go, but thanks for giving us a try.</p>
             <h2>Make a mistake? Having second thoughts?</h2>
-            <p>If you believe that this cancellation is an error, or you have any other questions, please contact support. You can also try to login with your last used credentials and follow the required steps to reactivate your account.</p>
+            <p>If you believe that this cancellation is an error, or you have any other questions, please contact support. You can also try to <a href="{ACTIVATE_ACCOUNT_LINK}">reactivate your account here</a>.</p>
             <p>Thank you again for being a customer.</p>
             <p>The crew team from CAPTinI.</p>
         """)
@@ -322,11 +323,11 @@ class ActivateAccountSerializer(serializers.Serializer):
         return value
 
     def save(self):
-        print(ACTIVATE_ACCOUNT_LINK)
+        print(REACTIVATE_ACCOUNT_LINK)
         user = User.objects.get(email=self.validated_data['email'])
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        activation_link = ACTIVATE_ACCOUNT_LINK +f"{uid}/{token}/"
+        activation_link = REACTIVATE_ACCOUNT_LINK +f"{uid}/{token}/"
 
         email_content = HtmlContent(f"""
             <p>Hi {user.username},</p>
