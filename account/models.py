@@ -76,7 +76,11 @@ class User(AbstractUser):
     def __str__(self):
         return '{} {}'.format(self.id, self.username)
 
-
+class UserSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session_start = models.DateTimeField(auto_now_add=True)
+    session_end = models.DateTimeField(null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)  # Store the total session duration
 
 # native language - gender - language level - notification setting - uploading profile photo
 # @receiver(post_save, sender=settings.AUTH_USER_MODEL)

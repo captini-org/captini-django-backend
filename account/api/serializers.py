@@ -1,4 +1,4 @@
-from account.models import User
+from account.models import User, UserSession
 from captini.models import UserTaskScoreStats, Task, Prompt, Lesson, Topic
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -277,3 +277,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     uid = serializers.CharField()
     token = serializers.CharField()
     new_password = serializers.CharField()
+
+class SessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserSession
+        fields = ['user', 'session_start', 'session_end', 'duration']

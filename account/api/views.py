@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django.utils.encoding import force_str
 from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSerializer
 from account import models
-from account.api.serializers import UserSerializer, UserLeaderboardSerializer
+from account.api.serializers import UserSerializer, UserLeaderboardSerializer, SessionSerializer
 from captini.api.permissions import *
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
@@ -16,8 +16,9 @@ from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from django_rest_passwordreset.views import ResetPasswordRequestToken
 from .serializers import PasswordResetSerializer,PasswordResetConfirmSerializer
-from account.models import User
+from account.models import User, UserSession
 from django.contrib.auth.tokens import default_token_generator
+from django.db.models import Sum
 
 @api_view(
     [
@@ -138,3 +139,33 @@ class PasswordResetConfirmView(generics.UpdateAPIView):
         user.save()
 
         return Response({'detail': 'Password has been reset successfully.'}, status=status.HTTP_200_OK)
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+class SessionView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SessionSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_object(self):
+        return self.request.user
+    
+class SessionUserDataView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SessionSerializer
+
+    def get_object(self):
+        user_id = self.kwargs['pk']
+        sessions = UserSession.objects.filter(user_id=user_id)
+        total_duration = sessions.aggregate(Sum('duration'))['duration__sum']
+        return {'total_duration': total_duration}
+
+    def get(self, request, *args, **kwargs):
+        session_data = self.get_object()
+        return Response(session_data)
