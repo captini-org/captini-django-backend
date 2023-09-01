@@ -48,6 +48,7 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         return 100*int((tot-len(errors))/tot),errors
 
     def takeScoreRecording(self,validated_data, filename):
+        
         print("Open connection")
         self.openConnection()
         print(validated_data['task'].task_text)
@@ -68,7 +69,8 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
         )
         print(f'[x]{message_data} sent to {routing_key}')
         # Wait until you don t get reply
-        return 0,""
+        
+        return 100, []
         
     def callback(self, ch, method, properties, body):
         if properties.correlation_id == self.session_id:
