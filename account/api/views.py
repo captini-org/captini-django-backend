@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django.utils.encoding import force_str
 from account.api.serializers import RegistrationSerializer, MyTokenObtainPairSerializer
 from account import models
-from account.api.serializers import UserSerializer, UserLeaderboardSerializer,DeactivateAccountSerializer,ActivateAccountSerializer,PasswordResetSerializer,PasswordResetConfirmSerializer,ConfirmAccountActivationSerializer, SessionSerializer
+from account.api.serializers import UserSerializer, UserLeaderboardSerializer,DeactivateAccountSerializer,ActivateAccountSerializer,PasswordResetSerializer,PasswordResetConfirmSerializer,ConfirmAccountActivationSerializer, SessionSerializer, TopicUserStatsSerializer, LessonUserStatsSerializer, LessonTasksUserStatsSerializer
 from captini.api.permissions import *
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.hashers import check_password
@@ -220,7 +220,30 @@ class ConfirmAccountActivationView(generics.UpdateAPIView):
 
         return Response({'detail': 'Account has been activated successfully.'}, status=status.HTTP_200_OK)
 
+class TopicUserStats(generics.RetrieveAPIView):
+    #permission_classes = [IsAuthenticated]
+    queryset = models.User.objects.all()
+    serializer_class = TopicUserStatsSerializer
+        
+class LessonUserStats(generics.RetrieveAPIView):
+    #permission_classes = [IsAuthenticated]
+    queryset = models.User.objects.all()
+    serializer_class = LessonUserStatsSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['topic_id'] = self.kwargs.get('pk2')  # Get the topic ID from the query parameters
+        return context
+        
+class LessonTasksUserStats(generics.RetrieveAPIView):
+    #permission_classes = [IsAuthenticated]
+    queryset = models.User.objects.all()
+    serializer_class = LessonTasksUserStatsSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['lesson_id'] = self.kwargs.get('pk2')  # Get the topic ID from the query parameters
+        return context
 
 
 '''def deactivate_account(request):

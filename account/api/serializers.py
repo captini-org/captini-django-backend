@@ -103,21 +103,21 @@ class UserSerializer(DynamicFieldsModelSerializer):
             prompts = lesson.prompts.all()
             prompts = prompts.annotate(task_count=Count('tasks'))
             #prompts = lesson.prompts.all().annotate(task_count=Count('tasks'))
-            print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
+            #print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
             
             all_prompts_completed = True
-            print(lesson)
+            #print(lesson)
             for prompt in prompts:
-                print(f"Checking prompt {prompt.id}")
+                #print(f"Checking prompt {prompt.id}")
                 completed_tasks_count = UserTaskScoreStats.objects.filter(
                     user_id=obj.id,
                     task__prompt=prompt
                 ).count()
 
-                print(f"Completed tasks for prompt {prompt.id}: {completed_tasks_count}/{prompt.task_count}")
+                #print(f"Completed tasks for prompt {prompt.id}: {completed_tasks_count}/{prompt.task_count}")
                     
                 if completed_tasks_count != prompt.task_count:
-                    print(completed_tasks_count)
+                    #print(completed_tasks_count)
                     all_prompts_completed = False
                     break
 
@@ -126,7 +126,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
         for lesson in Lesson.objects.all():
             prompts = lesson.prompts.all()
-            print(f"Lesson: {lesson.id}, Prompts: {[p.id for p in prompts]}")
+            #print(f"Lesson: {lesson.id}, Prompts: {[p.id for p in prompts]}")
 
         return completed_lessons
 
@@ -142,7 +142,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
             completed_lessons = 0
             for lesson in lessons:
                 prompts = lesson.prompts.all().annotate(task_count=Count('tasks'))
-                print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
+                #print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
                 
                 all_prompts_completed = True
                 for prompt in prompts:
@@ -151,7 +151,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
                         task__prompt=prompt
                     ).count()
 
-                    print(f"Completed tasks for prompt {prompt.id}: {completed_tasks_count}/{prompt.task_count}")
+                    #print(f"Completed tasks for prompt {prompt.id}: {completed_tasks_count}/{prompt.task_count}")
                         
                     if completed_tasks_count != prompt.task_count:
                         all_prompts_completed = False
@@ -358,3 +358,100 @@ class ConfirmAccountActivationSerializer(serializers.Serializer):
     uid = serializers.CharField()
     token = serializers.CharField()
     new_password = serializers.CharField()
+
+class TopicUserStatsSerializer(serializers.ModelSerializer):
+    completed_topics = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['completed_topics']
+
+    def get_completed_topics(self, obj):
+        topics = Topic.objects.annotate(lesson_count=Count('lessons')).order_by('id')
+
+        completed_topics = []
+        for topic in topics:
+            lessons = topic.lessons.all()
+
+            # Initialize counters
+            total_tasks_in_all_lessons = 0
+            total_completed_tasks_in_all_lessons = 0
+            
+            for lesson in lessons:
+                prompts = lesson.prompts.all().annotate(task_count=Count('tasks'))
+                total_tasks = sum(prompt.task_count for prompt in prompts)
+                
+                completed_tasks_count = UserTaskScoreStats.objects.filter(
+                    user_id=obj.id,
+                    task__prompt__lesson=lesson
+                ).count()
+
+                # Accumulate the tasks count
+                total_tasks_in_all_lessons += total_tasks
+                total_completed_tasks_in_all_lessons += completed_tasks_count
+
+            # Calculate the completion ratio for the topic
+            completion_progress = total_completed_tasks_in_all_lessons / total_tasks_in_all_lessons if total_tasks_in_all_lessons > 0 else 0.0
+            completed_topics.append([topic.id, completion_progress])
+
+        return completed_topics
+    
+class LessonUserStatsSerializer(serializers.ModelSerializer):
+    completed_lessons = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ['completed_lessons']
+
+    def get_completed_lessons(self, obj):
+        # Get all the lessons which have associated prompts
+        topic_id = self.context.get('topic_id')
+        print(self.context)
+        print(topic_id)
+        lessons = Lesson.objects.filter(topic_id=topic_id).annotate(prompt_count=Count('prompts')).order_by('id')
+
+        completed_lessons = []
+        for lesson in lessons:
+            prompts = lesson.prompts.all()
+            prompts = prompts.annotate(task_count=Count('tasks'))
+            
+            total_tasks = 0
+            completed_tasks = 0
+            
+            for prompt in prompts:
+                completed_tasks_count = UserTaskScoreStats.objects.filter(
+                    user_id=obj.id,
+                    task__prompt=prompt
+                ).count()
+                
+                total_tasks += prompt.task_count
+                completed_tasks += completed_tasks_count
+            
+            completion_percentage = completed_tasks / total_tasks if total_tasks > 0 else 0
+            completed_lessons.append((lesson.id, completion_percentage))
+
+        return completed_lessons
+    
+class LessonTasksUserStatsSerializer(serializers.ModelSerializer):
+        
+        class Meta:
+            model = UserTaskScoreStats
+            fields = ['username', 'first_name', 'last_name', 'email', 'birthyear', 'nationality','score', 
+                    'global_rank', 'country_rank','native_language', 'display_language', 'gender', 
+                    'language_level', 'notification_setting_in_app', 'notification_setting_email', 
+                    'profile_photo', 'completed_tasks', 'completed_lessons', 'completed_topics', 'average_score',
+                    'total_tasks', 'total_prompts', 'total_lessons', 'total_topics', 'total_tries']
+            read_only_fields = ['score', 'global_rank', 'country_rank', 'completed_tasks', 
+                                'completed_lessons', 'completed_topics', 'average_score',
+                                'total_tests', 'total_prompts', 'total_lessons', 'total_tasks', 'total_topics', 'total_tries']
+    
+        def get_completed_tasks(self, obj):
+            return UserTaskScoreStats.objects.filter(user_id=obj.user_id).count()
+            #return 1000
+
+        def get_tasks_progress_stats(self, user_id):
+            tasks = Task.objects.all()
+            task_stats = []
+            for task in tasks:
+                task_stats.append(self.get_task_progress_stats(user_id, task.id))
+            return task_stats

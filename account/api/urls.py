@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from account.api.views import  UserDetails, UserUpdateProfileView, registration_view, UserList, MyTokenObtainPairView,PasswordResetView,PasswordResetConfirmView, change_password, deactivate_account, ActivateAccountView,ConfirmAccountActivationView, SessionView, SessionUserDataView
+from account.api.views import  UserDetails, UserUpdateProfileView, registration_view, UserList, MyTokenObtainPairView,PasswordResetView,PasswordResetConfirmView, change_password, deactivate_account, ActivateAccountView,ConfirmAccountActivationView, SessionView, SessionUserDataView, TopicUserStats, LessonUserStats, LessonTasksUserStats
 
 urlpatterns = [
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -22,4 +22,7 @@ urlpatterns = [
     path('api/deactivate_account/',deactivate_account, name='deactivate_account'),
     path('api/activate_account/',ActivateAccountView.as_view(), name='activate_account'),
     path('api/reactivate_account/',ConfirmAccountActivationView.as_view(), name='reactivate_account'),
+    path("users/<int:pk>/topics/statistics/", TopicUserStats().as_view(), name="topic-user-stats"),
+    path("users/<int:pk>/topics/<int:pk2>/statistics/", LessonUserStats().as_view(), name="lesson-user-stats"),
+    path("users/<int:pk>/lesson/<int:pk2>/statistics/", LessonTasksUserStats().as_view(), name="lesson-tasks-user-stats"),
 ]
