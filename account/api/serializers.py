@@ -360,6 +360,9 @@ class ConfirmAccountActivationSerializer(serializers.Serializer):
     new_password = serializers.CharField()
 
 class TopicUserStatsSerializer(serializers.ModelSerializer):
+    """
+    Fetches the user's progress for each topic in the topic page.
+    """
     completed_topics = serializers.SerializerMethodField()
 
     class Meta:
@@ -397,6 +400,9 @@ class TopicUserStatsSerializer(serializers.ModelSerializer):
         return completed_topics
     
 class LessonUserStatsSerializer(serializers.ModelSerializer):
+    """
+    Fetches the user's progress for each lesson in a given topic.
+    """
     completed_lessons = serializers.SerializerMethodField()
     
     class Meta:
@@ -433,7 +439,11 @@ class LessonUserStatsSerializer(serializers.ModelSerializer):
         return completed_lessons
     
 class LessonTasksUserStatsSerializer(serializers.ModelSerializer):
-        
+        """
+        Fetches the user's score for each task in a given lesson.
+        """
+        #TODO: This has not been implemented, properly
+        # but it will be similar to how LessonUserStatsSerializer is implemented.
         class Meta:
             model = UserTaskScoreStats
             fields = ['username', 'first_name', 'last_name', 'email', 'birthyear', 'nationality','score', 
