@@ -239,7 +239,7 @@ INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (398,'Þær bjuggu í París í mörg ár.',187,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (399,'Ég fer til Parísar í næstu viku.',187,1);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (188,'F61(7)','',26,7);
-INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (400,'16. (sextándi) nóvember er dagur íslenskrar tungu.',188,0);
+INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (400,'Sextándi nóvember er dagur íslenskrar tungu.',188,0);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (401,'Á degi íslenskrar tungu eru margir viðburðir.',188,1);
 INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (28,6,'Áhersla alltaf á fyrsta atkvæði (stress is always on the first syllable)','Í íslensku er áhersla alltaf á fyrsta atkvæði orðs (in Icelandic, stress is always on the first syllable of a word).',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (196,'F63(1)','',28,1);

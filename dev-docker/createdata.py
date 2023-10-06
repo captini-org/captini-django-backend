@@ -15,6 +15,10 @@ conn = psycopg2.connect(
 
 cursor = conn.cursor()
 ### These queries are used to remove all the data so we will not have conflict with the id
+cursor.execute("DELETE FROM captini_exampletaskrecording;")
+conn.commit()
+cursor.execute("DELETE FROM account_usersession;")
+conn.commit()
 cursor.execute("DELETE FROM captini_usertaskrecording;")
 conn.commit()
 cursor.execute("DELETE FROM captini_usertaskscorestats;")
@@ -33,10 +37,6 @@ with open('captini.sql', encoding='utf-8') as file:
     for line in file:
         cursor.execute(line)                    
         conn.commit()
-cursor.close()
-cursor = conn.cursor()
-cursor.execute("DELETE FROM captini_exampletaskrecording;")
-conn.commit()
 with open('audio.sql', encoding='utf-8') as file:
     for line in file:
         cursor.execute(line)

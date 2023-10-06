@@ -147,23 +147,24 @@ WSGI_APPLICATION = "CaptiniAPI.wsgi.application"
 # subject to change when we have production db
 if(not docker):
     DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.environ.get("DATABASE_NAME", "captini"),
-        "USER": os.environ.get("DATABASE_USER", "django"),
-        "HOST": os.environ.get("DATABASE_HOST", "db"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "django"),
-        "PORT": os.environ.get("DATABASE_PORT", "5432"),
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "captini",
+            "USER": "postgres",
+            "PASSWORD": "",
+            "HOST": "localhost",
+            "PORT": "5432",
+            "charset": "utf8",
+        }
     }
-}
 else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql_psycopg2",
             "NAME": os.environ.get("DATABASE_NAME", "captini"),
-            "USER": os.environ.get("DATABASE_USER", "postgres"),
-            "HOST": os.environ.get("DATABASE_HOST", "localhost"),
-            "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+            "USER": os.environ.get("DATABASE_USER", "django"),
+            "HOST": os.environ.get("DATABASE_HOST", "db"),
+            "PASSWORD": os.environ.get("DATABASE_PASSWORD", "django"),
             "PORT": os.environ.get("DATABASE_PORT", "5432"),
         }
     }
@@ -197,11 +198,11 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIT_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_USER")
 DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
 # temporary api key from Baha in .env
 SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
-RESET_PASSWORD_LINK = os.environ['RESET_PASSWORD_LINK']
+ROOT_URL = os.environ['ROOT_URL']
 TEMPLATE_ID = os.environ['TEMPLATE_ID']
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -246,4 +247,5 @@ STATIC_URL = "static/"
 MEDIA_URL = "recordings/"
 
 MEDIA_ROOT = "recordings"
+
 PHOTOS_URL = "profile_photos"

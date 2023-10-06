@@ -10,13 +10,15 @@ from django.contrib.auth.tokens import default_token_generator
 from sendgrid.helpers.mail import Mail, HtmlContent
 from sendgrid import SendGridAPIClient
 import os
-from CaptiniAPI.settings import SENDGRID_API_KEY,EMAIL_HOST_USER, RESET_PASSWORD_LINK, TEMPLATE_ID
+from CaptiniAPI.settings import SENDGRID_API_KEY,EMAIL_HOST_USER, TEMPLATE_ID , ROOT_URL
 from django.db.models import Count, Avg, Sum
 from dotenv import load_dotenv, find_dotenv
 from rest_framework.exceptions import AuthenticationFailed
+
 load_dotenv(find_dotenv())
-ACTIVATE_ACCOUNT_LINK = os.environ['ACTIVATE_ACCOUNT_LINK']
-REACTIVATE_ACCOUNT_LINK= os.environ['REACTIVATE_ACCOUNT_LINK']
+ACTIVATE_ACCOUNT_LINK = os.environ['ROOT_URL']+'/activate-account/'
+REACTIVATE_ACCOUNT_LINK= os.environ['ROOT_URL']+'/reactivate-account/'
+RESET_PASSWORD_LINK = os.environ['ROOT_URL']+'/password-reset/'
 class RegistrationSerializer(serializers.ModelSerializer):
     
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -102,9 +104,6 @@ class UserSerializer(DynamicFieldsModelSerializer):
         for lesson in lessons:
             prompts = lesson.prompts.all()
             prompts = prompts.annotate(task_count=Count('tasks'))
-            #prompts = lesson.prompts.all().annotate(task_count=Count('tasks'))
-            #print(f"All prompts for lesson {lesson.id}: {[p.id for p in prompts]}")
-            
             all_prompts_completed = True
             #print(lesson)
             for prompt in prompts:
@@ -253,8 +252,8 @@ class PasswordResetSerializer(serializers.Serializer):
         user = User.objects.get(email=self.validated_data['email'])
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        reset_link = RESET_PASSWORD_LINK +f"{uid}/{token}/"
-
+        reset_link =  RESET_PASSWORD_LINK+f'{uid}/{token}/'
+        print(f'reet link:{reset_link} ')
         message = Mail(
             from_email= EMAIL_HOST_USER,  # Sender's email
             to_emails=self.validated_data['email'],  # Recipient's email
@@ -266,6 +265,7 @@ class PasswordResetSerializer(serializers.Serializer):
             "reset_link": reset_link
         }
         try:
+            print(f'[SENDGRID_API_KEY]:{SENDGRID_API_KEY} and [TEMPLATE_ID] {TEMPLATE_ID}  and [EMAIL_HOST_USER] {EMAIL_HOST_USER} ')
             sg = SendGridAPIClient(SENDGRID_API_KEY)
             response = sg.send(message)
         except Exception as e:
