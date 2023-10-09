@@ -69,9 +69,8 @@ class UserTaskScoreStats(models.Model):
 
 ### Function that is used to save all the recording keeping track only for the task id and gender
 def directory_path(instance, filename):
-    print(instance.task)
-    print(instance.gender)
-    path=settings.MEDIA_ROOT+'/users/recordings/{0}-{1}-{2}-{3}'.format(instance.task,instance.gender,filename)
+    path=settings.MEDIA_ROOT+'/{0}/{1}'.format(instance.task.id,filename)
+    print(path)
     return path
 
 def example_recording_directory_path(instance, filename):
@@ -84,15 +83,10 @@ class UserTaskRecording(models.Model):
     lesson = models.ForeignKey(Lesson, related_name='task_recording', on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
     score =  models.IntegerField(default=0)
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'task'],
-                name='unique_user_task_stats'
-            )
-        ]
+    recording = models.FileField(upload_to = directory_path,default='file_example')
+    
     #def save(self, *args, **kwargs):
-        # Save the model instance without the 'recording' field
+    # Save the model instance without the 'recording' field
     #    print(*args)
     #    super().save(*args, **kwargs)
         # Save the 'recording' file locally if it's a new instance or the file has changed

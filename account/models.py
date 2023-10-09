@@ -50,7 +50,7 @@ class User(AbstractUser):
     language_level = models.CharField(max_length=6, choices=LANGUAGE_LEVEL, default="L")
     notification_setting_in_app= models.BooleanField(default=False)
     notification_setting_email= models.BooleanField(default=False)
-    profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/user/profile_photos/puffin.jpg", blank=True)
+    profile_photo = models.ImageField(upload_to=user_directoryphotos, default="../recordings/user/profile_photos/profile.jpg", blank=True)
 
     def save(self, *args, **kwargs):
         '''overrides tendency in django to add hexadecimal in file name to prevent overwriting of file with same name'''
@@ -76,7 +76,11 @@ class User(AbstractUser):
     def __str__(self):
         return '{} {}'.format(self.id, self.username)
 
-
+class UserSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session_start = models.DateTimeField(auto_now_add=True)
+    session_end = models.DateTimeField(null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)  # Store the total session duration
 
 # native language - gender - language level - notification setting - uploading profile photo
 # @receiver(post_save, sender=settings.AUTH_USER_MODEL)

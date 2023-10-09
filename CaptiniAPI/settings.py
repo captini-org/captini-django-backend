@@ -22,8 +22,6 @@ load_dotenv(find_dotenv())
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ['SECRET_KEY']
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,6 +33,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+docker=True #it will change the db parameters
+
 
 ALLOWED_HOSTS = ["0.0.0.0"]
 
@@ -141,17 +141,29 @@ WSGI_APPLICATION = "CaptiniAPI.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 # subject to change when we have production db
-DATABASES = {
-    
-      "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.environ.get("DATABASE_NAME", "captini"),
-        "USER": os.environ.get("DATABASE_USER", "django"),
-        "HOST": os.environ.get("DATABASE_HOST", "db"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD", "django"),
-        "PORT": os.environ.get("DATABASE_PORT", "5432"),
+if(not docker):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "captini",
+            "USER": "postgres",
+            "PASSWORD": "",
+            "HOST": "localhost",
+            "PORT": "5432",
+            "charset": "utf8",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": os.environ.get("DATABASE_NAME", ""),
+            "USER": os.environ.get("DATABASE_USER", ""),
+            "HOST": os.environ.get("DATABASE_HOST", ""),
+            "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+            "PORT": os.environ.get("DATABASE_PORT", ""),
+        }
+    }
 
 
 # Password validation
@@ -178,6 +190,9 @@ AUTH_USER_MODEL = "account.User"
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini")
 EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "captini")
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIT_PORT = 587
 EMAIL_USE_TLS = True
@@ -186,7 +201,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = 'no-reply@tiro.is'
 # temporary api key from Baha in .env
 SENDGRID_API_KEY  = os.environ['SENDGRID_API_KEY']
-RESET_PASSWORD_LINK = os.environ['RESET_PASSWORD_LINK']
+ROOT_URL = os.environ['ROOT_URL']
 TEMPLATE_ID = os.environ['TEMPLATE_ID']
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -224,11 +239,3 @@ SIMPLE_JWT = {
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
 RABBITMQ_EXCHANGE = os.environ.get("RABBITMQ_EXCHANGE", "captini")
-
-# user photo registration
-STATIC_URL = "static/"
-
-MEDIA_URL = "recordings/"
-
-MEDIA_ROOT = "recordings"
-PHOTOS_URL = "profile_photos"

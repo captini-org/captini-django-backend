@@ -6,7 +6,13 @@ from rest_framework.test import APIRequestFactory
 import random
 import os
 from django.core.files.storage import default_storage
-
+import pika
+import json 
+import uuid
+import threading
+from django.db.models import Max
+from django.db import transaction
+import random
 factory = APIRequestFactory()
 request = factory.get('/')
 
@@ -17,105 +23,86 @@ class UserPromptScoreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TaskRecordingSerializer(serializers.ModelSerializer):
-    recording = serializers.FileField()  # Assuming 'recording' is a CharField in your request
+    recording = serializers.FileField()
 
     class Meta:
         model = UserTaskRecording
         fields = ['recording', 'user', 'task', 'lesson']
 
-    ### N.B. it will be fixed because actually it is running only in localhost when we will run the caitlin script in a real server it will work better
-    def calculateScore(self,output):
-        tot = 0
-        errors=[]
-        for line in output.splitlines()[1:]: # skip first line
-            if(line[0]!= '\t'):
-                words = line.split("\t")
-                tot=tot+1
-                if(float(words[1]) <-0.2):
-                    errors.append(words[0])
+    #Opening connection
+    def openConnection(self):
+        self.response_event = threading.Event()
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='connector_rabbitmq_1'))
+        self.channel = self.connection.channel()
+        self.session_id= str(uuid.uuid4())
 
-        return 100*int((tot-len(errors))/tot),errors
+    def format_exercise_text(self,exercise_text):
+        # Remove '.', ';', ',', and '-' characters and convert to lowercase
+        formatted_text = exercise_text.replace('.', '').replace(';', '').replace(',', '').replace('-', '').replace('–', '').replace('?', '').replace('!', '').lower()
+        # Remove extra spaces
+        formatted_text = ' '.join(formatted_text.split())
+        return formatted_text
 
-    def takeScoreRecording(self,validated_data):
-        recording = validated_data['recording']
-
-        # Use os.path.join to build the path (assumes you are running from captini-django-backend)
-        # script_path = os.path.join("..", "..", "modules", "pronunciation", "pronunciation-score-icelandic", "demo.py")
-
-        #print(script_path)
-
-        # Change the working directory to the directory of the script
-        # os.chdir(os.path.dirname(script_path))
-
-        # command = 'source ~/anaconda3/etc/profile.d/conda.sh; conda activate captinidemo; ~/anaconda3/envs/captinidemo/bin/python demo.py'
-
-        #output = subprocess.check_output(command, universal_newlines=True, shell=True)
-
-        # process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, executable="/bin/bash")
-        # output, err = process.communicate()
-        # print(output)
-
-        #script_path="/Users/davide/Desktop/connector/pronunciation-score-icelandic/demo.py"
-        #os.chdir("/Users/davide/Desktop/connector/pronunciation-score-icelandic/")
-        #command = ["python3", "-W", "ignore", script_path]
-        #output = subprocess.check_output(command, universal_newlines=True)
-        #return self.calculateScore(output)
-        return 100, []
+    def takeScoreRecording(self,validated_data, filename, recording_id):
+        self.openConnection()
+        formatted_text = self.format_exercise_text(validated_data['task'].task_text)
+        message_data = {
+            "audio_path": filename,
+            "session_id": self.session_id,
+            "text_id": validated_data['task'].id,
+            "text" : formatted_text,
+            "speaker_id": validated_data['user'].id,
+            "recording_id": recording_id
+        }
+        #Send Message
+        routing_key = 'SYNC_SPEECH_INPUT'
+        self.channel.basic_publish(
+            exchange="captini",
+            routing_key=routing_key,
+            body=json.dumps(message_data)
+        )
+        return 1, []
         
-    ### TODO async function with RabbitMQ to save the file with a queue
+    def callback(self, ch, method, properties, body):
+        if properties.correlation_id == self.session_id:
+            response_data = json.loads(body)
+            print(response_data)
+            self.response_event.set()
+        ch.close()
+
+    def close_connection(self):
+        self.connection.close()
+
     def saveRecordingLocally(self,validated_data):
-        ###PATH /pronunciation-score-icelandic/recordings/M4demo_j7bpKCm.wav
         name=f"{validated_data['user'].gender}{validated_data['task'].id}{validated_data['recording'].name}"
         filename = default_storage.get_available_name(name)
         default_storage.save(filename, validated_data['recording'])
         return filename
 
-    #Override of the creation to save the score inside the DB and modify the user total score 
     def create(self, validated_data):
-        score, errors = self.takeScoreRecording(validated_data)
-        self.saveRecordingLocally(validated_data)
+        '''
+        filename=self.saveRecordingLocally(validated_data)
+        score, errors = self.takeScoreRecording(validated_data,filename)
+        '''
         old_score = 0
-        scoring = {
-            'score_mean': score,
-            'task_id': validated_data['task'].id,
-            'user_id': validated_data['user'].id,
-            'number_tries': "1"
-        }
+        task_recording = UserTaskRecording.objects.filter(user=validated_data['user'], task=validated_data['task']).aggregate(Max('score'))
+        if task_recording['score__max'] is not None:
+            old_score = task_recording['score__max']
+        filename = self.saveRecordingLocally(validated_data)
+        # TODO: save the userTaskrecording
+        # Create UserTaskRecording object
+        with transaction.atomic():  
+            new_task_recording = UserTaskRecording.objects.create(
+                score=0,
+                **validated_data
+            )
 
-        task_recording = UserTaskRecording.objects.filter(user=validated_data['user'], task=validated_data['task']).first()
-        if task_recording:
-            old_score = task_recording.score
-            task_recording.score = score
+        # Get the recording ID
+        recording_id = new_task_recording.id
+        score, errors = self.takeScoreRecording(validated_data, filename, recording_id)
+        new_task_recording.errors = errors
+        return new_task_recording
 
-            stats = UserTaskScoreStats.objects.filter(user=validated_data['user'], task=validated_data['task']).first()
-
-            if stats:
-                stats.score_mean = ((stats.score_mean * stats.number_tries) + score) / (stats.number_tries + 1)
-                stats.number_tries += 1
-                stats.save()
-            else:
-                # If the UserTaskScoreStats record doesn't exist, create a new one.
-                stats = UserTaskScoreStats.objects.create(
-                    user=validated_data['user'],
-                    task=validated_data['task'],
-                    score_mean=score,
-                    number_tries=1
-                )
-            task_recording.save()
-
-        else:
-            if 'recording' in validated_data:
-                del validated_data['recording']
-            task_recording = UserTaskRecording.objects.create(score=score, **validated_data)
-            stats = UserTaskScoreStats.objects.create(**scoring)
-
-        validated_data['user'].score = validated_data['user'].score + score - old_score
-        validated_data['user'].save()
-        task_recording.errors = errors
-
-        return task_recording
-
-    #Overwrite output
     def to_representation(self, instance):
         return {'task':instance.task.id,'score': instance.score, 'errors': instance.errors}
     

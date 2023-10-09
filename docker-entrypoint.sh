@@ -10,3 +10,4 @@ else
 
   exec python manage.py runserver 0.0.0.0:8000
 fi
+python dev-docker/createdata.py
