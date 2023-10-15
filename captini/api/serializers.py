@@ -12,6 +12,7 @@ import uuid
 import threading
 from django.db.models import Max
 from django.db import transaction
+from django.conf import settings
 import random
 import logging
 factory = APIRequestFactory()
@@ -33,7 +34,7 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
     #Opening connection
     def openConnection(self):
         self.response_event = threading.Event()
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='connector_rabbitmq_1'))
+        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=settings.RABBITMQ_HOST))
         self.channel = self.connection.channel()
         self.session_id= str(uuid.uuid4())
 
