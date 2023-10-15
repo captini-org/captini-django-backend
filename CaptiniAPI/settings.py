@@ -239,3 +239,20 @@ SIMPLE_JWT = {
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
 RABBITMQ_EXCHANGE = os.environ.get("RABBITMQ_EXCHANGE", "captini")
+
+# user photo registration
+PHOTOS_URL = "profile_photos"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}

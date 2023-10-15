@@ -13,6 +13,7 @@ import threading
 from django.db.models import Max
 from django.db import transaction
 import random
+import logging
 factory = APIRequestFactory()
 request = factory.get('/')
 
@@ -54,6 +55,8 @@ class TaskRecordingSerializer(serializers.ModelSerializer):
             "speaker_id": validated_data['user'].id,
             "recording_id": recording_id
         }
+        logging.info(f"printing {json.dumps(message_data)}")
+
         #Send Message
         routing_key = 'SYNC_SPEECH_INPUT'
         self.channel.basic_publish(
