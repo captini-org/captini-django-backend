@@ -1,4 +1,4 @@
-INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (3,'Meira um sérhljóð (more on vowels)', 'X', 3);
+INSERT INTO captini_topic (id,topic_name, topic_description, number) VALUES (3,'Meira um sérhljóð // More on vowels', 'X', 3);
 INSERT INTO captini_lesson (id, topic_id, subject, description,number) VALUES (13,3,'Meira um löng sérhljóð (more on long vowels)','Sérhljóð eru löng þegar þau standa á undan p/t/k + r/v/j (vowels are long when they are followed by p/t/k + r/v/j).',3);
 INSERT INTO captini_prompt (id, prompt_number, flashcard_text , lesson_id,number) VALUES (91,'F33(1)','',13,1);
 INSERT INTO captini_task (id, task_text, prompt_id, number) VALUES (204,'lepja – apríl',91,0);
