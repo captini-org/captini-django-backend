@@ -16,4 +16,4 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 staticfiles/
-recordings/
+#recordings/

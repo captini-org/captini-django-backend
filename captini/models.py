@@ -6,25 +6,31 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
 import os
 #from compositefk.fields import CompositeForeignKey
-
-
 from account.models import User
 
+def topics_photos(instance, filename):
+    # Construct the upload path based on the instance and filename
+    upload_path = f"topics/{filename}"
+    return upload_path
 class Topic(models.Model):
     topic_name = models.CharField(max_length=100)
     topic_description = models.TextField(max_length=254)
     number = models.IntegerField(default=0)
-    
+    photo = models.ImageField(upload_to=topics_photos, default="../recordings/topics/default_topic.jpeg", blank=True)
     def __str__(self):
         return self.topic_name
-    
+ 
+def lessons_photos(instance, filename):
+    # Construct the upload path based on the instance and filename
+    upload_path = f"lessons/{filename}"
+    return upload_path
 
 class Lesson(models.Model):
     topic = models.ForeignKey(Topic, related_name='lessons', on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
     description = models.TextField(max_length=254)
     number = models.IntegerField(default=0)
-
+    photo = models.ImageField(upload_to=lessons_photos, default="../recordings/lessons/default.jpeg", blank=True)
     def __str__(self):
         return self.subject
 
