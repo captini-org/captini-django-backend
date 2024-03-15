@@ -13,6 +13,7 @@ def topics_photos(instance, filename):
     upload_path = f"topics/{filename}"
     return upload_path
 class Topic(models.Model):
+    id = models.AutoField(primary_key=True)
     topic_name = models.CharField(max_length=100)
     topic_description = models.TextField(max_length=254)
     number = models.IntegerField(default=0)
@@ -26,6 +27,7 @@ def lessons_photos(instance, filename):
     return upload_path
 
 class Lesson(models.Model):
+    id = models.AutoField(primary_key=True)
     topic = models.ForeignKey(Topic, related_name='lessons', on_delete=models.CASCADE)
     subject = models.CharField(max_length=100)
     description = models.TextField(max_length=254)
