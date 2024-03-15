@@ -37,6 +37,7 @@ class Lesson(models.Model):
         return self.subject
 
 class Prompt(models.Model):
+    id = models.AutoField(primary_key=True)
     lesson = models.ForeignKey(Lesson, related_name='prompts', on_delete=models.CASCADE)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
     flashcard_text = models.TextField(max_length=500, default="", blank=True)
@@ -46,6 +47,7 @@ class Prompt(models.Model):
         return self.prompt_number
 
 class Task(models.Model):
+    id = models.AutoField(primary_key=True)
     prompt = models.ForeignKey(Prompt, related_name='tasks', on_delete=models.CASCADE)
     task_text = models.CharField(max_length=255)
     number = models.IntegerField(default=0)
@@ -53,6 +55,7 @@ class Task(models.Model):
         return self.task_text
 
 class UserPromptScore(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, related_name='user_prompt_score', on_delete=models.CASCADE)
     lesson_topic = models.CharField(max_length = 255, blank=False)
     prompt_number = models.CharField(max_length=25, blank=False, unique=True)
@@ -63,6 +66,7 @@ class UserPromptScore(models.Model):
 
 #Audit table that will be used to the statistics for the user
 class UserTaskScoreStats(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, related_name='user_task_score', on_delete=models.CASCADE)
     task =models.ForeignKey(Task, related_name='task_id_score', on_delete=models.CASCADE)
     score_mean = models.IntegerField(default=0)
@@ -86,6 +90,7 @@ def example_recording_directory_path(instance, filename):
 
 
 class UserTaskRecording(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, related_name='task_recording', on_delete=models.CASCADE)
     task = models.ForeignKey(Task, related_name='task_recording', on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, related_name='task_recording', on_delete=models.CASCADE)
@@ -107,6 +112,7 @@ GENDER = [
 ]
     
 class ExampleTaskRecording(models.Model):
+    id = models.AutoField(primary_key=True)
     task = models.ForeignKey(Task, related_name='task_example', on_delete=models.CASCADE)
     gender = models.CharField(max_length=6, choices=GENDER, default="M")
     recording = models.FileField(max_length=150, upload_to=example_recording_directory_path)
